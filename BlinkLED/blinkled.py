@@ -4,15 +4,20 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
-
 GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD) # calls the GPIO from the physical board 
-GPIO.setup(4,GPIO.OUT,initial=GPIO.LOW) #setup pin 
+GPIO.setmode(GPIO.BCM) # calls the GPIO from the physical board 
+GPIO.setup(4,GPIO.OUT,initial=GPIO.LOW) #setup pin 4 as output
 
 # running while loop 
 while True:
-  GPIO.output(4, GPIO.HIGH)    
-  sleep(0.5)
-  GPIO.output(4,GPIO.LOW)
+  GPIO.output(4, GPIO.HIGH)   #set output to high
+  print("LED is ON")
+  
+  sleep(0.04) # keep LED on for 0.04 second 
+  
+  GPIO.output(4,GPIO.LOW) # set LED output to low 
+  print("LED is off") 
+
+  time.sleep(0.04) # keep LED for 0.04
 
 
