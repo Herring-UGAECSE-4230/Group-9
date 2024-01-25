@@ -46,5 +46,5 @@ while True:
   print("LED is ON")
   
 GPIO.cleanup()
->>>>>>> 22784d2100e7acc5e862924a36446cca175578f7
+
 
