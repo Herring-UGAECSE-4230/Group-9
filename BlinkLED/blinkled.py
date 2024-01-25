@@ -26,25 +26,11 @@ GPIO.setup(4,GPIO.OUT,initial=GPIO.LOW) #setup pin 4 as output
 
 
 # running while loop 
-while True:
-<<<<<<< HEAD
-  
-  #LED on
-  GPIO.output(4, GPIO.HIGH)   #set output to high
-  print("LED is ON")
-  sleep(0.07) # keep LED on for 0.04 second 
-
-  #LED off
-  GPIO.output(4,GPIO.LOW) # set LED output to low 
-  print("LED is off")
-  time.sleep(0.07) # keep LED for 0.04
-
-=======
-  p = GPIO.PWM(4, 7000)    #sets frequency 
-  p.start(50) # sets DC to 50% 
-
-  print("LED is ON")
-  
+p = GPIO.PWM(4, 7000)
+p.start(1)
+input('Press return to stop:')   # use raw_input for Python 2
+p.stop()
 GPIO.cleanup()
+  
 
 
