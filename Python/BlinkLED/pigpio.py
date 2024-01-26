@@ -14,5 +14,5 @@ while True:
     # empty loop that keeps program running while the LED is blinking.
     pass 
 
-wiringpi.softToneWrite(23, 0) # set the pin frequency to 0 to shut it off 
+pi.set_PWM_dutycycle(23, 0) # set the pin frequency to 0 to shut it off 
  
