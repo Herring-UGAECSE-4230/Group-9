@@ -1,4 +1,4 @@
-import wiringpi 
+import wiringpi
 
 
 wiringpi.wiringPiSetupGpio() # calls the GPIO pins by their GPIO pin number

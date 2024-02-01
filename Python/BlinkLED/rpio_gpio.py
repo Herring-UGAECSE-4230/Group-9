@@ -10,7 +10,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM) # calls the GPIO from the physical board 
 GPIO.setup(23,GPIO.OUT,initial=GPIO.LOW) #setup pin 4 as output
 
-freq = 100000   # sets a low frequency 
+freq = 10   # sets a low frequency 
 print(f"{freq}")
 #running while loop 
 while True:
