@@ -41,8 +41,6 @@ while True:
 # Part 3 pigpio  _____________________________________________
 
 import pigpio
-import time 
-from time import sleep 
 
 pi = pigpio.pi()           
 
