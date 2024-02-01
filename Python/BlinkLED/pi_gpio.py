@@ -1,6 +1,4 @@
 import pigpio
-import time 
-from time import sleep 
 
 pi = pigpio.pi()           
 
