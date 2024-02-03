@@ -4,6 +4,10 @@ import time
 def event_callback(pin):
     value = GPIO.input(pin)
     print(f"pin is {pin}, value is {value}")
+    #this callback below registers the key that was pressed if no other key is currently pressed
+    #global keypadPressed
+    #if keypadPressed == -1:
+        #keypadPressed = pin
   
 if __name__ == '__main__':
     BUTTON_pin = 5 # column pins
@@ -22,6 +26,6 @@ if __name__ == '__main__':
     GPIO.add_event_detect(BUTTON_pin, GPIO.BOTH, callback = event_callback, bouncetime=300)
 
     try:
-        time.sleep(1000)
+        time.sleep(9000)
     except KeyboardInterrupt:
         GPIO.cleanup()

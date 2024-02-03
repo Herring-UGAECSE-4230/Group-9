@@ -18,27 +18,38 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
 #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
-GPIO.setup(ROW_1, GPIO.IN)
-GPIO.setup(ROW_2, GPIO.IN)
-GPIO.setup(ROW_3, GPIO.IN)
-GPIO.setup(ROW_4, GPIO.IN)
+# GPIO.setup(ROW_1, GPIO.IN)
+# GPIO.setup(ROW_2, GPIO.IN)
+# GPIO.setup(ROW_3, GPIO.IN)
+# GPIO.setup(ROW_4, GPIO.IN)
+
+GPIO.setup(ROW_1, GPIO.OUT)
+GPIO.setup(ROW_2, GPIO.OUT)
+GPIO.setup(ROW_3, GPIO.OUT)
+GPIO.setup(ROW_4, GPIO.OUT)
 
 #from instructions: pins connected to the 'Y' lines will be setup as outputs from the pad/inputs to the PI
 #if needed set low by default: pull_up_down=GPIO.PUD_DOWN
-GPIO.setup(COL_1, GPIO.OUT)
-GPIO.setup(COL_2, GPIO.OUT)
-GPIO.setup(COL_3, GPIO.OUT)
-GPIO.setup(COL_4, GPIO.OUT)
+GPIO.setup(COL_1, GPIO.IN)
+GPIO.setup(COL_2, GPIO.IN)
+GPIO.setup(COL_3, GPIO.IN)
+GPIO.setup(COL_4, GPIO.IN)
+
+# GPIO.setup(COL_1, GPIO.OUT)
+# GPIO.setup(COL_2, GPIO.OUT)
+# GPIO.setup(COL_3, GPIO.OUT)
+# GPIO.setup(COL_4, GPIO.OUT)
 
 def readKeypad(rowNum, char):
+    curlVaL = 0
     GPIO.output(rowNum, GPIO.HIGH)
-    If GPIO.input(COL_1)==1:
+    if GPIO.input(COL_1)==1:
         curVal = char[0]
-    If GPIO.input(COL_2)==1:
+    if GPIO.input(COL_2)==1:
         curVal = char[1]
-    If GPIO.input(COL_3)==1:
+    if GPIO.input(COL_3)==1:
         curVal = char[2]
-    If GPIO.input(COL_4)==1:
+    if GPIO.input(COL_4)==1:
         curVal = char[3]
     GPIO.output(rowNum, GPIO.LOW)
     return curVal #check this SIMLINE
@@ -48,10 +59,10 @@ def readKeypad(rowNum, char):
 print("Press buttons on keypad. Ctrl+C to exit.")
 try:
     while True:
-        readKeypad(ROW_1,[1,2,3,'A'])
-        readKeypad(ROW_2,[4,5,6,'B'])
-        readKeypad(ROW_3,[7,8,9,'C'])
-        readKeypad(ROW_4,['*',0,'#','D'])
+        readKeypad(ROW_1,['1','2','3','A'])
+        readKeypad(ROW_2,['4','5','6','B'])
+        readKeypad(ROW_3,['7','8','9','C'])
+        readKeypad(ROW_4,['*','0','#','D'])
         time.sleep(0.2)
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
