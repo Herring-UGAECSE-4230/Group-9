@@ -11,7 +11,7 @@ ROW_4 = 6
 COL_1 = 5
 COL_2 = 22
 COL_3 = 27
-COL_4 = 17
+COL_4 = 23
 
 GPIO.setwarnings(False)
 #BCM numbering
@@ -32,20 +32,19 @@ GPIO.setup(COL_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(COL_4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 def readKeypad(rowNum, char):
-    curVal=-1
     GPIO.output(rowNum, GPIO.HIGH)
     if GPIO.input(COL_1)==1:
-        curVal = char[0]
-    elif GPIO.input(COL_2)==1:
-        curVal = char[1]
-    elif GPIO.input(COL_3)==1:
-        curVal = char[2]
-    elif GPIO.input(COL_4)==1:
-        curVal = char[3]
-    else: 
-        GPIO.output(rowNum, GPIO.LOW)
+        print(char[0])
+    if GPIO.input(COL_2)==1:
+        print(char[1])
+    if GPIO.input(COL_3)==1:
+        print(char[2])
+    if GPIO.input(COL_4)==1:
+        print(char[3])
+    # else: 
+    GPIO.output(rowNum, GPIO.LOW)
     # return curVal #check this SIMLINE
-    print(curVal)
+    # print(characters[0])
 
 
 #physical keyboard layout
