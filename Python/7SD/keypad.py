@@ -11,7 +11,7 @@ ROW_4 = 6
 COL_1 = 5
 COL_2 = 22
 COL_3 = 27
-COL_4 = 23
+COL_4 = 4
 
 GPIO.setwarnings(False)
 #BCM numbering
