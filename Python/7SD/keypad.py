@@ -18,30 +18,21 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
 #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
-# GPIO.setup(ROW_1, GPIO.IN)
-# GPIO.setup(ROW_2, GPIO.IN)
-# GPIO.setup(ROW_3, GPIO.IN)
-# GPIO.setup(ROW_4, GPIO.IN)
 
-GPIO.setup(ROW_1, GPIO.OUT)
-GPIO.setup(ROW_2, GPIO.OUT)
-GPIO.setup(ROW_3, GPIO.OUT)
-GPIO.setup(ROW_4, GPIO.OUT)
+GPIO.setup(ROW_1, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(ROW_2, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(ROW_3, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(ROW_4, GPIO.OUT, initial=GPIO.LOW)
 
 #from instructions: pins connected to the 'Y' lines will be setup as outputs from the pad/inputs to the PI
 #if needed set low by default: pull_up_down=GPIO.PUD_DOWN
-GPIO.setup(COL_1, GPIO.IN)
-GPIO.setup(COL_2, GPIO.IN)
-GPIO.setup(COL_3, GPIO.IN)
-GPIO.setup(COL_4, GPIO.IN)
-
-# GPIO.setup(COL_1, GPIO.OUT)
-# GPIO.setup(COL_2, GPIO.OUT)
-# GPIO.setup(COL_3, GPIO.OUT)
-# GPIO.setup(COL_4, GPIO.OUT)
+GPIO.setup(COL_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(COL_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(COL_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(COL_4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 def readKeypad(rowNum, char):
-    curVal= -1
+    curVal=-1
     GPIO.output(rowNum, GPIO.HIGH)
     if GPIO.input(COL_1)==1:
         curVal = char[0]
@@ -53,15 +44,9 @@ def readKeypad(rowNum, char):
         curVal = char[3]
     else: 
         GPIO.output(rowNum, GPIO.LOW)
-        return -1
-    return curVal #check this SIMLINE
-    # print(curVal)
+    # return curVal #check this SIMLINE
+    print(curVal)
 
-# readKeypad(ROW_1,['1','2','3','A'])
-# readKeypad(ROW_2,['4','5','6','B'])
-# readKeypad(ROW_3,['7','8','9','C'])
-# readKeypad(ROW_4,['*','0','#','D'])
-# time.sleep(0.2)
 
 #physical keyboard layout
 #loop checking each row
