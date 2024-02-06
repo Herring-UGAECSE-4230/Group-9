@@ -38,22 +38,17 @@ keypad_mapping = {
 def display_number(number):
     # Define the segments required to display each number
     numbers = {
-        0: [1, 1, 1, 1, 1, 1, 0],
-        1: [0, 1, 1, 0, 0, 0, 0],
-        2: [1, 1, 0, 1, 1, 0, 1],
-        3: [1, 1, 1, 1, 0, 0, 1],
-        4: [0, 1, 1, 0, 0, 1, 1],
-        5: [1, 0, 1, 1, 0, 1, 1],
-        6: [1, 0, 1, 1, 1, 1, 1],
-        7: [1, 1, 1, 0, 0, 0, 0],
-        8: [1, 1, 1, 1, 1, 1, 1],
-        9: [1, 1, 1, 1, 0, 1, 1],
-        "A": [1, 1, 1, 0, 1, 1, 1],
-        "B": [0, 0, 1, 1, 1, 1, 1],
-        "C": [1, 0, 0, 1, 1, 1, 0],
-        "D": [0, 1, 1, 1, 1, 0, 1],
-        "*": [0, 0, 0, 0, 0, 0, 0],
-        "#": [0, 0, 0, 0, 0, 0, 0]
+        0: [1, 1, 1, 1, 1, 1, 0, 0],
+        1: [0, 1, 1, 0, 0, 0, 0, 0],
+        2: [1, 1, 0, 1, 1, 0, 1, 0],
+        3: [1, 1, 1, 1, 0, 0, 1, 0],
+        4: [0, 1, 1, 0, 0, 1, 1, 0],
+        5: [1, 0, 1, 1, 0, 1, 1, 0],
+        6: [1, 0, 1, 1, 1, 1, 1, 0],
+        7: [1, 1, 1, 0, 0, 0, 0, 0],
+        8: [1, 1, 1, 1, 1, 1, 1, 0],
+        9: [1, 1, 1, 1, 0, 1, 1, 0],
+        10: [0, 0, 0, 0, 0, 0, 0, 1]
     }
     
     # Turn on/off the segments based on the number
@@ -72,11 +67,19 @@ def get_key():
         GPIO.output(col_pin, GPIO.HIGH)
     return None
 
+clk_status = GPIO.LOW
+def running_clk():
+    while True:
+        clk_status = GPIO.LOW
+        time.sleep(1) #1 second
+        clk_status = GPIO.HIGH
+        time.sleep(1) #1 second
+
 # Main loop
 try:
     while True:
         key = get_key()
-        if key:
+        if running_clk() == GPIO.HIGH and key:
             print("Pressed:", key)
             # Display the pressed key on the SSD
             display_number(key)
