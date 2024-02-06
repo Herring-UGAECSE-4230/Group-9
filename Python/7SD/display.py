@@ -8,8 +8,8 @@ GPIO.setmode(GPIO.BCM)
 segments = [11, 12, 13, 15, 16, 18, 22]
 
 # Define the pin numbers for the keypad rows and columns
-keypad_rows = [29, 31, 33, 35]
-keypad_cols = [32, 36, 38, 40]
+keypad_rows = [18, 23, 24, 25] #X1-X4
+keypad_cols = [12, 16, 20, 21] #Y1-Y4
 
 # Set up GPIO pins for segments
 for segment_pin in segments:
