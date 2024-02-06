@@ -8,7 +8,7 @@ GPIO.setmode(GPIO.BCM)
 segments = [11, 12, 13, 15, 16, 18, 22] #data pins from DFF
 
 #Define the clock pins
-clock_pins = [10] # operating only left-most segment currently (reading from left to right)
+clock_1 = [10] # operating only left-most segment currently (reading from left to right)
 
 # Define the pin numbers for the keypad rows and columns
 keypad_rows = [18, 23, 24, 25] #X1-X4
@@ -67,19 +67,20 @@ def get_key():
         GPIO.output(col_pin, GPIO.HIGH)
     return None
 
-clk_status = GPIO.LOW
+clk_status = GPIO.output(clock_1, GPIO.LOW)
 def running_clk():
     while True:
-        clk_status = GPIO.LOW
+        clk_status = GPIO.output(clock_1, GPIO.LOW)
         time.sleep(1) #1 second
-        clk_status = GPIO.HIGH
+        clk_status = GPIO.output(clock_1, GPIO.HIGH)
         time.sleep(1) #1 second
 
 # Main loop
 try:
     while True:
         key = get_key()
-        if running_clk() == GPIO.HIGH and key:
+        status = GPIO.output(clock_1, GPIO.HIGH)
+        if running_clk() == status and key:
             print("Pressed:", key)
             # Display the pressed key on the SSD
             display_number(key)
