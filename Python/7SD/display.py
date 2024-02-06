@@ -5,7 +5,10 @@ from time import sleep
 GPIO.setmode(GPIO.BCM)
 
 # Define the pin numbers for the segments of the 7-segment display
-segments = [11, 12, 13, 15, 16, 18, 22]
+segments = [11, 12, 13, 15, 16, 18, 22] #data pins from DFF
+
+#Define the clock pins
+clock_pins = [10] # operating only left-most segment currently
 
 # Define the pin numbers for the keypad rows and columns
 keypad_rows = [18, 23, 24, 25] #X1-X4
