@@ -1,14 +1,17 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
+GPIO.setwarnings(False)
+
 # Set GPIO mode
 GPIO.setmode(GPIO.BCM)
 
 # Define the pin numbers for the segments of the 7-segment display
-segments = [11, 12, 13, 15, 16, 18, 22] #data pins from DFF
+segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
 
 #Define the clock pins
 clock_1 = [10] # operating only left-most segment currently (reading from left to right)
+GPIO.setup(10, GPIO.OUT)
 
 # Define the pin numbers for the keypad rows and columns
 keypad_rows = [18, 23, 24, 25] #X1-X4
@@ -21,7 +24,8 @@ for segment_pin in segments:
 
 # Set up GPIO pins for keypad rows and columns
 for row_pin in keypad_rows:
-    GPIO.setup(row_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(row_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
 for col_pin in keypad_cols:
     GPIO.setup(col_pin, GPIO.OUT)
     GPIO.output(col_pin, GPIO.HIGH)
@@ -48,7 +52,7 @@ def display_number(number):
         7: [1, 1, 1, 0, 0, 0, 0, 0],
         8: [1, 1, 1, 1, 1, 1, 1, 0],
         9: [1, 1, 1, 1, 0, 1, 1, 0],
-        10: [0, 0, 0, 0, 0, 0, 0, 1]
+        10: [0, 0, 0, 0, 0, 0, 0, 1] #dp
     }
     
     # Turn on/off the segments based on the number
@@ -61,33 +65,53 @@ def get_key():
         GPIO.output(col_pin, GPIO.LOW)
         for row, row_pin in enumerate(keypad_rows):
             if GPIO.input(row_pin) == GPIO.LOW:
-                key = keypad_mapping.get((row, col))
-                if key:
-                    return key
+                return(row, col)
+                #key = keypad_mapping.get((row, col))
+                #if key:
+                    # return key
+                    #print(key)
         GPIO.output(col_pin, GPIO.HIGH)
-    return None
+    #return 
 
-clk_status = GPIO.output(clock_1, GPIO.LOW)
-def running_clk():
-    while True:
-        clk_status = GPIO.output(clock_1, GPIO.LOW)
-        time.sleep(1) #1 second
-        clk_status = GPIO.output(clock_1, GPIO.HIGH)
-        time.sleep(1) #1 second
+# clk_status = GPIO.output(clock_1, GPIO.LOW)
+# def running_clk():
+#     while True:
+#         GPIO.output(clock_1, GPIO.HIGH)
+#         sleep(1)
+#         get_key()
+#         GPIO.output(clock_1, GPIO.LOW)
+        # print("low")
+        # if key:
+        #         print("Pressed:", key)
+        #         # Display the pressed key on the SSD
+        # key = get_key()
+        # # clk_status = GPIO.output(clock_1, GPIO.LOW)
+        # # print("high")
+        # # sleep(1) #1 second
 
 # Main loop
 try:
     while True:
-        key = get_key()
-        status = GPIO.output(clock_1, GPIO.HIGH)
-        if running_clk() == status and key:
-            print("Pressed:", key)
-            # Display the pressed key on the SSD
-            display_number(key)
-        else:
-            # Turn off the SSD if no key is pressed
-            display_number("*")
-        sleep(0.1)  # Add a small delay to avoid excessive polling
+        # key = get_key()
+        # status = GPIO.output(clock_1, GPIO.HIGH)
+        # print("loop")
+        GPIO.output(clock_1, GPIO.HIGH)
+        sleep(0.1)
+        
+        get_key()
+        GPIO.output(clock_1, GPIO.LOW)
+        
+        # if running_clk() == status:
+        #     print("loop2")
+        #     # if key:
+        #     #     print("Pressed:", key)
+        #     #     # Display the pressed key on the SSD
+        #     #     display_number(key)
+
+        # else:
+        #     # Turn off the SSD if no key is pressed
+        #     display_number("*")
+        # sleep(0.1)  # Add a small delay to avoid excessive polling
 
 finally:
     GPIO.cleanup()  # Clean up GPIO on exit
