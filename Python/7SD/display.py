@@ -8,7 +8,7 @@ GPIO.setmode(GPIO.BCM)
 segments = [11, 12, 13, 15, 16, 18, 22] #data pins from DFF
 
 #Define the clock pins
-clock_pins = [10] # operating only left-most segment currently
+clock_pins = [10] # operating only left-most segment currently (reading from left to right)
 
 # Define the pin numbers for the keypad rows and columns
 keypad_rows = [18, 23, 24, 25] #X1-X4
