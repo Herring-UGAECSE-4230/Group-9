@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 # Set GPIO mode
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 
 # Define the pin numbers for the segments of the 7-segment display
 segments = [11, 12, 13, 15, 16, 18, 22]
