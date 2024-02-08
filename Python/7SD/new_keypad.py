@@ -81,27 +81,51 @@ keypad_mapping = {
 
 
 def compare_x(rows, columns, keypad_mapping):
-    result = []
-    for row_val, col_val in zip(keypad_rows, keypad_cols):
-        key = (row_val, col_val)
-        if key in keypad_mapping:
-            result.append(keypad_mapping[key])
-        else:
-            result.append("not there yall")
-        print(result) #prints list
+#     result = []
+#     for row_val, col_val in zip(keypad_rows, keypad_cols):
+#         key = (row_val, col_val)
+#         if key in keypad_mapping:
+#             result.append(keypad_mapping[key])
+#         else:
+#             result.append(None)
+#         print(result) #prints list
+#     return result
+    key = (tuple(rows), tuple(columns))
+    if key in keypad_mapping:
+        return keypad_mapping[key]
+    else:
+        return None
 
 def readKeypad(row, col):
     for row in keypad_rows:
         GPIO.output(row, GPIO.HIGH)
-        for row,col in zip(keypad_rows,keypad_cols):
-            if GPIO.input(col_pin) == 1:
-                compare_x(row,col,keypad_mapping)
-    return 
+        for col in keypad_cols:
+            if GPIO.input(col) == GPIO.HIGH:
+                return row, col
+        GPIO.output(row, GPIO.LOW)
+    return None, None
 
-while True:
-    readKeypad(row,keypad_mapping.keys)
-    
-compare_result = compare_x(keypad_rows, keypad_cols, keypad_mapping)
-print(compare_result) #prints actual num
+# while True:
+#     readKeypad(row,keypad_mapping.keys)
+#     
+# compare_result = compare_x(keypad_rows, keypad_cols, keypad_mapping)
+# print(compare_result) #prints actual num
 
-z
+# main loop
+try:
+    while True:
+        row_pressed, col_pressed = readKeypad(keypad_rows, keypad_cols)
+        
+        if row_pressed is not None and col_pressed is not None:
+            print(f"Key pressed: {row_pressed}-{col_pressed}")
+            
+        # comparing part
+            key_result = compare_x([row_pressed], [col_pressed], keypad_mapping)
+            
+            if key_result is not None:
+                print(f"Mapped value: {key_result[0]}")
+                
+            else:
+                print("not mapped")
+finally:
+    GPIO.cleanup()
