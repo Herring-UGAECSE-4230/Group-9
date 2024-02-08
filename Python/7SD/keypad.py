@@ -24,6 +24,17 @@ keypad_mapping = {
     (2, 0): 7, (2, 1): 8, (2, 2): 9, (2, 3): "C",
     (3, 0): "*", (3, 1): 0, (3, 2): "#", (3, 3): "D"
 }
+# Function to get the pressed key
+def get_key():
+    for col, col_pin in enumerate(keypad_cols):
+        GPIO.output(col_pin, GPIO.LOW)
+        for row, row_pin in enumerate(keypad_rows):
+            if GPIO.input(row_pin) == GPIO.LOW:
+                key = keypad_mapping.get((row, col))
+                if key:
+                    return key
+        GPIO.output(col_pin, GPIO.HIGH)
+    return None
 
 GPIO.setwarnings(False)
 #BCM numbering
