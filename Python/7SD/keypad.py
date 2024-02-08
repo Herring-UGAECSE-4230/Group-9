@@ -17,6 +17,14 @@ import time
 keypad_rows = [18, 23, 24, 25] #X1-X4
 keypad_cols = [12, 16, 20, 21] #Y1-Y4
 
+# Define the mapping of keypad buttons to numbers
+keypad_mapping = {
+    (0, 0): 1, (0, 1): 2, (0, 2): 3, (0, 3): "A",
+    (1, 0): 4, (1, 1): 5, (1, 2): 6, (1, 3): "B",
+    (2, 0): 7, (2, 1): 8, (2, 2): 9, (2, 3): "C",
+    (3, 0): "*", (3, 1): 0, (3, 2): "#", (3, 3): "D"
+}
+
 GPIO.setwarnings(False)
 #BCM numbering
 GPIO.setmode(GPIO.BCM)
