@@ -44,29 +44,29 @@ for col_pin in keypad_cols:
 
 def readKeypad(rowNum, char):
     GPIO.output(rowNum, GPIO.HIGH)
-    if GPIO.input(COL_1)==1:
+    if GPIO.input(col_pin)==1:
         print(char[0])
-    if GPIO.input(COL_2)==1:
+    if GPIO.input(col_pin)==1:
         print(char[1])
-    if GPIO.input(COL_3)==1:
+    if GPIO.input(col_pin)==1:
         print(char[2])
-    if GPIO.input(COL_4)==1:
+    if GPIO.input(col_pin)==1:
         print(char[3])
     # else: 
     GPIO.output(rowNum, GPIO.LOW)
     # return curVal #check this SIMLINE
-    # print(characters[0])
+    print(char[0])
 
 
 #physical keyboard layout
 #loop checking each row
-print("Press buttons on keypad. Ctrl+C to exit.")
+print("Press buttosns on keypad. Ctrl+C to exit.")
 try:
     while True:
-        readKeypad(ROW_1,['1','2','3','A'])
-        readKeypad(ROW_2,['4','5','6','B'])
-        readKeypad(ROW_3,['7','8','9','C'])
-        readKeypad(ROW_4,['*','0','#','D'])
+        readKeypad(row_pin,['1','2','3','A'])
+        readKeypad(row_pin,['4','5','6','B'])
+        readKeypad(row_pin,['7','8','9','C'])
+        readKeypad(row_pin,['*','0','#','D'])
         time.sleep(0.2)
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
