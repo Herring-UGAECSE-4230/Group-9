@@ -24,7 +24,7 @@ for row_pin in keypad_rows:
 for col_pin in keypad_cols:
     GPIO.setup(col_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN )
     # GPIO.output(col_pin, GPIO.HIGH)
-# #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
+#from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
 
  GPIO.setup(ROW_1, GPIO.OUT, initial=GPIO.LOW)
  GPIO.setup(ROW_2, GPIO.OUT, initial=GPIO.LOW)

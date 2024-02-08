@@ -79,33 +79,29 @@ keypad_mapping = {
 #         elif row == keypad_rows[3] and col==keypad_cols[3]: # if row = 25 and col =21
 #             print("D") 
 
-def readKeypad(row, char):
-    GPIO.output(keypad_rows, GPIO.HIGH)
-    if GPIO.input(col_pin)==1:
-        print(char[0])
-    if GPIO.input(col_pin)==1:
-        print(char[1])
-    if GPIO.input(col_pin)==1:
-        print(char[2])
-    if GPIO.input(col_pin)==1:
-        print(char[3])
-    # else: 
-    GPIO.output(rowNum, GPIO.LOW)
-    # return curVal #check this SIMLINE
-    print(char[0])
 
-def compare(rows, columns, keypad_mapping):
+def compare_x(rows, columns, keypad_mapping):
     result = []
-    # while True:
-        for row_val, col_val in zip(keypad_rows, keypad_cols):
-            key = (row_val, col_val)
-            if key in keypad_mapping:
-                result.append(keypad_mapping[key])
-            else:
-                result.append("not there yall")
+    for row_val, col_val in zip(keypad_rows, keypad_cols):
+        key = (row_val, col_val)
+        if key in keypad_mapping:
+            result.append(keypad_mapping[key])
+        else:
+            result.append("not there yall")
         print(result) #prints list
 
+def readKeypad(row, col):
+    for row in keypad_rows:
+        GPIO.output(row, GPIO.HIGH)
+        for row,col in zip(keypad_rows,keypad_cols):
+            if GPIO.input(col_pin) == 1:
+                compare_x(row,col,keypad_mapping)
+    return 
 
-compare_result = compare(keypad_rows, keypad_cols, keypad_mapping)
+while True:
+    readKeypad(row,keypad_mapping.keys)
+    
+compare_result = compare_x(keypad_rows, keypad_cols, keypad_mapping)
 print(compare_result) #prints actual num
 
+z
