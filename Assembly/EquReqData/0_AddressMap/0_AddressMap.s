@@ -11,12 +11,12 @@
 .global _start
 _start:
 	LDR R2, =our_fixed_data	@ point to our_fixed_data	
-	 @ load r0 with the contents of memory pointed to by r2
+	@ load r0 with the contents of memory pointed to by r2
 	LDRB R0, [R2]
 	@ terminate the program
 	MOV R7, #1			
 	SVC 0
- 
+
 our_fixed_data:    					
 	.byte	0x55, 0x33, 1, 2, 3, 4, 5, 6		
 	.word	0x23222120, 0x30		

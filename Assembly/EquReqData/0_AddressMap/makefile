@@ -14,10 +14,10 @@ endif
 
 # The % is a wildcard.  For below, reads as for all .s files and create a .0 file with DEBUGFLGS output
 %.o : %.s
-	as $(DEBUGFLGS) $< -o $@
+			as $(DEBUGFLGS) $< -o $@
 ${PROG}: $(OBJS)
-	ld -o ${PROG} $(OBJS)
+			ld -o ${PROG} $(OBJS)
 
 #cleanup
 clean: $(OBJS)
-	rm *.o ${PROG}
+			rm *.o ${PROG}
