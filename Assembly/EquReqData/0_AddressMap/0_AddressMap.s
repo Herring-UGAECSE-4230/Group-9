@@ -8,7 +8,7 @@
 @ The next address row would be 00004004.  Have your table count down by addresses so the top row is lowest address.
 
 
-.text
+		.text
 .global _start
 _start:
 	ldr r2, =our_fixed_data	@ point to our_fixed_data	
@@ -18,7 +18,7 @@ _start:
 	mov r7, #1			
 	svc 0
  
-our_fixed_data:    					
-	.byte	0x55, 0x33, 1, 2, 3, 4, 5, 6		
-	.word	0x23222120, 0x30		
-	.hword	0x4540, 0x50			
+@our_fixed_data:    					
+@	.byte	0x55, 0x33, 1, 2, 3, 4, 5, 6		
+@	.word	0x23222120, 0x30		
+@	.hword	0x4540, 0x50			
