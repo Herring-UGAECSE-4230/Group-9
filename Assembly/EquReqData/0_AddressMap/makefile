@@ -1,27 +1,23 @@
-#Points to the file to be compiles
-FILE = 0_AddressMap.s
+#Program name
+PROG = 0_AddressMap
 
-#This OBJS is just a variable that we can define as the file we would like to create
-OBJS = ${FILE}.o
+OBJS = ${PROG}.o
 
 DEBUG = 1
 
-#This statement is for if the user types make DEBUG=1 then the DEBUGFLGS variable is -g
 ifdef DEBUG
 DEBUGFLGS = -g
 
-#If the user did not define the make DEBUG=1 then there are no debug flags
 else
 DEBUGFLGS =
 endif
 
-#The % is a wildcard character and in the case below it reads as for all .s files create a .o file with the DEBUGFLGS as outputs
+# The % is a wildcard.  For below, reads as for all .s files and create a .0 file with DEBUGFLGS output
 %.o : %.s
 	as $(DEBUGFLGS) $< -o $@
-${FILE}: $(OBJS)
-	ld -o ${FILE} $(OBJS)
+${PROG}: $(OBJS)
+	ld -o ${PROG} $(OBJS)
 
-#This allows the user to type make clean to remove all the .o files without having to manually delete them all
-#the * is also a wildcard character character and says for all .o files remove
+#cleanup
 clean: $(OBJS)
-	rm *.o ${FILE}
+	rm *.o ${PROG}
