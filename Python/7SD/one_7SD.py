@@ -85,8 +85,122 @@ def reset():
 
 
 
+
+
 #function to interpret which button was pressed
 def readKeypad(rowNum,char):
+    
+    def hashtag():
+        print("#")
+        if GPIO.output(27, GPIO.LOW) and GPIO.output(22, GPIO.LOW) and GPIO.output(13, GPIO.LOW) and GPIO.output(2, GPIO.LOW) and GPIO.output(5, GPIO.LOW) and GPIO.output(6, GPIO.LOW) and GPIO.output(26, GPIO.LOW) and GPIO.output(3, GPIO.LOW):
+            print("dog")
+            if state==1:
+                one()
+            if state==2:
+                two()
+            if state==3:
+                three()
+            if state==4:
+                four()
+            if state==5:
+                five()
+            if state==6:
+                six()
+            if state==7:
+                seven()
+            if state==8:
+                eight()
+            if state==9:
+                nine()
+            if state==10:
+                star()
+        else:
+            reset()
+            
+    def zero():        
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        GPIO.output(26, GPIO.HIGH)
+        state=0
+        
+    def one():
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        state=1
+    
+    def two():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        state=2
+    
+    def three():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        state=3
+    
+    def four():
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        state=4
+    
+    def five():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        state=5
+        
+    def six():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        state=6
+        
+    def seven():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        state=7
+        
+    def eight():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        state=8
+    
+    def nine():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        state=9
+    
+    def star():
+        GPIO.output(26, GPIO.HIGH)
+        state=10
+    
+    display=-1
     GPIO.setmode(GPIO.BCM)
     GPIO.output(rowNum, GPIO.HIGH)
 ##################################################
@@ -95,131 +209,71 @@ def readKeypad(rowNum,char):
         if rowNum==18: 
             print("1")
             reset()
-            GPIO.output(22, GPIO.HIGH)
-            GPIO.output(13, GPIO.HIGH)
-            
-         
+            one()
         if rowNum==23:
             print("4")
             reset()
-            GPIO.output(2, GPIO.HIGH)
-            GPIO.output(3, GPIO.HIGH)
-            GPIO.output(22, GPIO.HIGH)
-            GPIO.output(13, GPIO.HIGH)
-            
-            
+            four()
         if rowNum==24:
             print("7")
             reset()
-            GPIO.output(27, GPIO.HIGH)
-            GPIO.output(22, GPIO.HIGH)
-            GPIO.output(13, GPIO.HIGH)
-      
-            
+            seven()
         if rowNum==25:
             print("*")
             reset()
-            GPIO.output(26, GPIO.HIGH)
-           
+            star()
             
     if GPIO.input(COL_2)==1:
          #col_1 is 16
         if rowNum==18:
             print("2")
             reset()
-            GPIO.output(27, GPIO.HIGH)
-            GPIO.output(22, GPIO.HIGH)
-            GPIO.output(3, GPIO.HIGH)
-            GPIO.output(5, GPIO.HIGH)
-            GPIO.output(6, GPIO.HIGH)
-            
-            
+            two()
         if rowNum==23:
             print("5")
             reset()
-            GPIO.output(27, GPIO.HIGH)
-            GPIO.output(2, GPIO.HIGH)
-            GPIO.output(3, GPIO.HIGH)
-            GPIO.output(13, GPIO.HIGH)
-            GPIO.output(6, GPIO.HIGH)
-            
+            five()
         if rowNum==24:
             print("8")
             reset()
-            GPIO.output(27, GPIO.HIGH)
-            GPIO.output(22, GPIO.HIGH)
-            GPIO.output(13, GPIO.HIGH)
-            GPIO.output(2, GPIO.HIGH)
-            GPIO.output(5, GPIO.HIGH)
-            GPIO.output(6, GPIO.HIGH)
-            GPIO.output(3, GPIO.HIGH)
-            
+            eight()
         if rowNum==25:
             print("0")
             reset()
-            GPIO.output(27, GPIO.HIGH)
-            GPIO.output(22, GPIO.HIGH)
-            GPIO.output(13, GPIO.HIGH)
-            GPIO.output(2, GPIO.HIGH)
-            GPIO.output(5, GPIO.HIGH)
-            GPIO.output(6, GPIO.HIGH)
-            GPIO.output(26, GPIO.HIGH)
+            zero()
         
-            
     if GPIO.input(COL_3)==1:
          #col_1 is 20
         if rowNum==18:
             print("3")
             reset()
-            GPIO.output(27, GPIO.HIGH)
-            GPIO.output(22, GPIO.HIGH)
-            GPIO.output(3, GPIO.HIGH)
-            GPIO.output(13, GPIO.HIGH)
-            GPIO.output(6, GPIO.HIGH)
-            
+            three()
         if rowNum==23:
             print("6")
             reset()
-            GPIO.output(27, GPIO.HIGH)
-            GPIO.output(2, GPIO.HIGH)
-            GPIO.output(5, GPIO.HIGH)
-            GPIO.output(6, GPIO.HIGH)
-            GPIO.output(13, GPIO.HIGH)
-            GPIO.output(3, GPIO.HIGH)
-          
+            six()
         if rowNum==24:
             print("9")
             reset()
-            GPIO.output(27, GPIO.HIGH)
-            GPIO.output(2, GPIO.HIGH)
-            GPIO.output(22, GPIO.HIGH)
-            GPIO.output(3, GPIO.HIGH)
-            GPIO.output(13, GPIO.HIGH)
-            
+            nine()
         if rowNum==25:
             print("#")
-            GPIO.output(27, GPIO.LOW)
-            GPIO.output(22, GPIO.LOW)
-            GPIO.output(13, GPIO.LOW)
-            GPIO.output(2, GPIO.LOW)
-            GPIO.output(5, GPIO.LOW)
-            GPIO.output(6, GPIO.LOW)
-            GPIO.output(26, GPIO.LOW)
-            GPIO.output(3, GPIO.LOW)
+            hashtag()
+                
             
       
        
-    if GPIO.input(COL_4)==1:
-         #col_1 is 21
-        if rowNum==18:
-            print("A")
-        if rowNum==23:
-            print("B")
-        if rowNum==24:
-            print("C")
-        if rowNum==25:
-            print("D")
-       
+#         if GPIO.input(COL_4)==1:
+#              #col_1 is 21
+#             if rowNum==18:
+#                 print("A")
+#             if rowNum==23:
+#                 print("B")
+#             if rowNum==24:
+#                 print("C")
+#             if rowNum==25:
+#                 print("D")
+#        
     GPIO.output(rowNum, GPIO.LOW)
     # return curVal #check this SIMLINE
 
