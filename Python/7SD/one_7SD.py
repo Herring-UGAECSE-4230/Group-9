@@ -1,5 +1,11 @@
 import RPi.GPIO as GPIO
 import time
+from time import sleep
+
+GPIO.setwarnings(False)
+#BCM numbering
+GPIO.setmode(GPIO.BCM)
+
 #setting row pins
 ROW_1 = 18
 ROW_2 = 23
@@ -10,12 +16,14 @@ COL_1 = 12
 COL_2 = 16
 COL_3 = 20
 COL_4 = 21
+
+# clock pins
+clk1 = 10 #left most DFF
+GPIO.setup(clk1, GPIO.OUT, initial=GPIO.LOW)
+
 # Define the pin numbers for the segments of the 7-segment display
 segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
 
-GPIO.setwarnings(False)
-#BCM numbering
-GPIO.setmode(GPIO.BCM)
 #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
 GPIO.setup(ROW_1, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(ROW_2, GPIO.OUT, initial=GPIO.LOW)
@@ -28,32 +36,187 @@ GPIO.setup(COL_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(COL_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(COL_4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-keypad_value= 2
-def readKeypad(rowNum, char):
+
+
+GPIO.setup(27, GPIO.OUT, initial=GPIO.LOW) #A
+GPIO.setup(22, GPIO.OUT, initial=GPIO.LOW) #B
+GPIO.setup(13, GPIO.OUT, initial=GPIO.LOW) #C
+GPIO.setup(6, GPIO.OUT, initial=GPIO.LOW) #D
+GPIO.setup(5, GPIO.OUT, initial=GPIO.LOW)#E
+GPIO.setup(2, GPIO.OUT, initial=GPIO.LOW)#F
+GPIO.setup(3, GPIO.OUT, initial=GPIO.LOW)#G
+GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)#Dp
+
+#function to toggle on and off clock
+def toggleClock():
+    GPIO.output(clk1, GPIO.HIGH)
+    sleep(0.0001)
+
+    GPIO.output(clk1, GPIO.LOW)
+    sleep(0.0001)
+
+    
+# #funtion to call specfic segments and make GPIO HIGH
+# def readGPIO(pins):
+#     GPIO.setmode(GPIO.BCM)
+#     
+#     GPIO.setup(22, GPIO.OUT, initial=GPIO.LOW) #B
+#     GPIO.setup(13, GPIO.OUT, initial=GPIO.LOW) #C
+#         
+#     GPIO.output(22, GPIO.HIGH)
+#     GPIO.output(13, GPIO.HIGH)
+
+def reset():
+    GPIO.output(22, GPIO.LOW)
+    GPIO.output(13, GPIO.LOW)
+    GPIO.output(2, GPIO.LOW)
+    GPIO.output(5, GPIO.LOW)
+    GPIO.output(6, GPIO.LOW)
+    GPIO.output(26, GPIO.LOW)
+    GPIO.output(27, GPIO.LOW)
+    GPIO.output(3, GPIO.LOW)
+
+
+
+#function to interpret which button was pressed
+def readKeypad(rowNum,char):
+    GPIO.setmode(GPIO.BCM)
     GPIO.output(rowNum, GPIO.HIGH)
-    global keypad_value
+##################################################
     if GPIO.input(COL_1)==1:
-#         print(char[0])
-#         return char[0]
-        keypad_value= char[0]
-        return keypad_value
+        #col_1 is 12
+        if rowNum==18: 
+            print("1")
+            reset()
+            GPIO.output(22, GPIO.HIGH)
+            GPIO.output(13, GPIO.HIGH)
+            
+         
+        if rowNum==23:
+            print("4")
+            reset()
+            GPIO.output(2, GPIO.HIGH)
+            GPIO.output(3, GPIO.HIGH)
+            GPIO.output(22, GPIO.HIGH)
+            GPIO.output(13, GPIO.HIGH)
+            
+            
+        if rowNum==24:
+            print("7")
+            reset()
+            GPIO.output(27, GPIO.HIGH)
+            GPIO.output(22, GPIO.HIGH)
+            GPIO.output(13, GPIO.HIGH)
+      
+            
+        if rowNum==25:
+            print("*")
+            reset()
+            GPIO.output(26, GPIO.HIGH)
+           
+            
     if GPIO.input(COL_2)==1:
-#         print(char[1])
-#         return char[1]
-        keypad_value= char[1]
-        return keypad_value
+         #col_1 is 16
+        if rowNum==18:
+            print("2")
+            reset()
+            GPIO.output(27, GPIO.HIGH)
+            GPIO.output(22, GPIO.HIGH)
+            GPIO.output(3, GPIO.HIGH)
+            GPIO.output(5, GPIO.HIGH)
+            GPIO.output(6, GPIO.HIGH)
+            
+            
+        if rowNum==23:
+            print("5")
+            reset()
+            GPIO.output(27, GPIO.HIGH)
+            GPIO.output(2, GPIO.HIGH)
+            GPIO.output(3, GPIO.HIGH)
+            GPIO.output(13, GPIO.HIGH)
+            GPIO.output(6, GPIO.HIGH)
+            
+        if rowNum==24:
+            print("8")
+            reset()
+            GPIO.output(27, GPIO.HIGH)
+            GPIO.output(22, GPIO.HIGH)
+            GPIO.output(13, GPIO.HIGH)
+            GPIO.output(2, GPIO.HIGH)
+            GPIO.output(5, GPIO.HIGH)
+            GPIO.output(6, GPIO.HIGH)
+            GPIO.output(3, GPIO.HIGH)
+            
+        if rowNum==25:
+            print("0")
+            reset()
+            GPIO.output(27, GPIO.HIGH)
+            GPIO.output(22, GPIO.HIGH)
+            GPIO.output(13, GPIO.HIGH)
+            GPIO.output(2, GPIO.HIGH)
+            GPIO.output(5, GPIO.HIGH)
+            GPIO.output(6, GPIO.HIGH)
+            GPIO.output(26, GPIO.HIGH)
+        
+            
     if GPIO.input(COL_3)==1:
-#         print(char[2])
-#         return char[2]
-        keypad_value= char[2]
-        return keypad_value
+         #col_1 is 20
+        if rowNum==18:
+            print("3")
+            reset()
+            GPIO.output(27, GPIO.HIGH)
+            GPIO.output(22, GPIO.HIGH)
+            GPIO.output(3, GPIO.HIGH)
+            GPIO.output(13, GPIO.HIGH)
+            GPIO.output(6, GPIO.HIGH)
+            
+        if rowNum==23:
+            print("6")
+            reset()
+            GPIO.output(27, GPIO.HIGH)
+            GPIO.output(2, GPIO.HIGH)
+            GPIO.output(5, GPIO.HIGH)
+            GPIO.output(6, GPIO.HIGH)
+            GPIO.output(13, GPIO.HIGH)
+            GPIO.output(3, GPIO.HIGH)
+          
+        if rowNum==24:
+            print("9")
+            reset()
+            GPIO.output(27, GPIO.HIGH)
+            GPIO.output(2, GPIO.HIGH)
+            GPIO.output(22, GPIO.HIGH)
+            GPIO.output(3, GPIO.HIGH)
+            GPIO.output(13, GPIO.HIGH)
+            
+        if rowNum==25:
+            print("#")
+            GPIO.output(27, GPIO.LOW)
+            GPIO.output(22, GPIO.LOW)
+            GPIO.output(13, GPIO.LOW)
+            GPIO.output(2, GPIO.LOW)
+            GPIO.output(5, GPIO.LOW)
+            GPIO.output(6, GPIO.LOW)
+            GPIO.output(26, GPIO.LOW)
+            GPIO.output(3, GPIO.LOW)
+            
+      
+       
     if GPIO.input(COL_4)==1:
-#         print(char[3])
-#         return char[3]
-        keypad_value= char[3]
-        return keypad_value
+         #col_1 is 21
+        if rowNum==18:
+            print("A")
+        if rowNum==23:
+            print("B")
+        if rowNum==24:
+            print("C")
+        if rowNum==25:
+            print("D")
+       
     GPIO.output(rowNum, GPIO.LOW)
     # return curVal #check this SIMLINE
+
+
 #physical keyboard layout
 #loop checking each row
 print("Press buttons on keypad. Ctrl+C to exit.")
@@ -85,33 +248,13 @@ def display_number(number):
 
 try:
     while True:
-        readKeypad(ROW_1,['1','2','3','A'])
-        readKeypad(ROW_2,['4','5','6','B'])
-        readKeypad(ROW_3,['7','8','9','C'])
-        readKeypad(ROW_4,['*','0','#','D'])
-        time.sleep(0.2)
+        readKeypad(ROW_1,['1','4','7','*'])
+        readKeypad(ROW_2,['2','5','8','0'])
+        readKeypad(ROW_3,['3','6','9','#'])
+        readKeypad(ROW_4,['A','B','C','D'])
+        time.sleep(.2)
         
-        print(display_number(keypad_value))
-#         print(keypad_value)
-        
-    while True:
-        #getting user input from keypad
-        GPIO.output(rowNum, GPIO.HIGH)
-        global keypad_value
-        if GPIO.input(COL_1)==1:
-            keypad_value= char[0]
-        if GPIO.input(COL_2)==1:
-            keypad_value= char[1]
-        if GPIO.input(COL_3)==1:
-            keypad_value= char[2]
-        if GPIO.input(COL_4)==1:
-            keypad_value= char[3]
-        return keypad_value
-        GPIO.output(rowNum, GPIO.LOW)
-        
-        #comparing user input to segment keypad_mapping
-        if rowNum and 
-        display_number(keypad_value)
+        toggleClock()
         
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
