@@ -48,12 +48,19 @@ GPIO.setup(3, GPIO.OUT, initial=GPIO.LOW)#G
 GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)#Dp
 
 #function to toggle on and off clock
-def toggleClock():
-    GPIO.output(clk1, GPIO.HIGH)
-    sleep(0.0001)
+# def toggleClock():
+#     GPIO.output(clk1, GPIO.HIGH)
+#     sleep(0.0001)
 
-    GPIO.output(clk1, GPIO.LOW)
-    sleep(0.0001)
+#     GPIO.output(clk1, GPIO.LOW)
+#     sleep(0.0001)
+
+def toggleClock():
+    # Read the current state of the pin
+    current_state = GPIO.input(clk1)
+    # Toggle the pin state
+    new_state = GPIO.LOW if current_state == GPIO.HIGH else GPIO.HIGH
+    GPIO.output(clk1, new_state)
 
     
 # #funtion to call specfic segments and make GPIO HIGH
