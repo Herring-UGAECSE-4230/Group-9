@@ -29,13 +29,13 @@ GPIO.setup(ROW_1, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(ROW_2, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(ROW_3, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(ROW_4, GPIO.OUT, initial=GPIO.LOW)
+
 #from instructions: pins connected to the 'Y' lines will be setup as outputs from the pad/inputs to the PI
 #if needed set low by default: pull_up_down=GPIO.PUD_DOWN
 GPIO.setup(COL_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(COL_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(COL_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(COL_4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
 
 
 GPIO.setup(27, GPIO.OUT, initial=GPIO.LOW) #A
