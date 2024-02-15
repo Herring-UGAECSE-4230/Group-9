@@ -5,7 +5,8 @@ from time import sleep
 GPIO.setwarnings(False)
 #BCM numbering
 GPIO.setmode(GPIO.BCM)
-
+global hashtag
+hashtag= False
 #setting row pins
 ROW_1 = 18
 ROW_2 = 23
@@ -114,6 +115,10 @@ def readKeypad(rowNum,char):
                 nine()
             if state==10:
                 star()
+            if hashtag==False:
+                hashtag=True
+            else:
+                hashtag=False
         else:
             reset()
             

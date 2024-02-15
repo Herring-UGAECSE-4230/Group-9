@@ -229,7 +229,7 @@ def readKeypad(rowNum, char):
             reset()
             display_number(1)
             last_displayed_number = 1
-         if rowNum==23:
+        if rowNum==23:
             print("4")
             reset()
             display_number(4)
@@ -333,8 +333,8 @@ def display_number(number):
         9: [1, 1, 1, 1, 0, 1, 1, 0],
         10: [0, 0, 0, 0, 0, 0, 0, 1] #dp
     }
-    i=number
-    print(numbers[i])
+# i=number
+#         print(numbers[i])
 
 try:
     while True:
