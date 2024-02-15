@@ -112,23 +112,25 @@ def readKeypad(rowNum,char):
             print("Display ON")
             display_state = 1
             hash_count = 0
+
         else:  # If display is on
             hash_count += 1
             if hash_count >= 4:  # Toggle display off after four consecutive "#" key presses
                 print("Display OFF")
                 display_state = 0
                 hash_count = 0
+                reset()
 
     def zero():        
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    GPIO.output(2, GPIO.HIGH)
-    GPIO.output(5, GPIO.HIGH)
-    GPIO.output(6, GPIO.HIGH)
-    GPIO.output(26, GPIO.HIGH)
-    state=0
-    check=0
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        GPIO.output(26, GPIO.HIGH)
+        state=0
+        check=0
     
     def one():
         GPIO.output(22, GPIO.HIGH)
@@ -312,8 +314,6 @@ def readKeypad(rowNum,char):
             state = 9
         if rowNum==25:
             print("#")
-            if char == "#":
-                toggle_display()
                 
        
     if GPIO.input(COL_4)==1:
@@ -336,7 +336,7 @@ def readKeypad(rowNum,char):
             state = 14
 
     if char == '#':
-    hashtag()
+        hashtag()
        
     GPIO.output(rowNum, GPIO.LOW)
     # return curVal #check this SIMLINE
