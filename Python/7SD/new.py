@@ -6,6 +6,7 @@ from time import sleep
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
+
  #setting row pins
 rows = [18, 23, 24, 25] # X1 - X4
 
@@ -19,21 +20,21 @@ clk_pins = [10, 9, 11, 8] # left to right DFF
 segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
 
 #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
-for i in range(3):
+for i in range(len(rows)):
     GPIO.setup(rows[i], GPIO.OUT, initial=GPIO.LOW)
 
 #from instructions: pins connected to the 'Y' lines will be setup as outputs from the pad/inputs to the PI
 #if needed set low by default: pull_up_down=GPIO.PUD_DOWN
-for i in range(3):
+for i in range(len(cols)):
     GPIO.setup(cols[i], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 # setup for 7SD GPIO Pins
-for i in range(7): 
+for i in range(len(segments)): 
     GPIO.setup(segments[i], GPIO.OUT, initial=GPIO.LOW)
     GPIO.output(segments[i], GPIO.LOW)
 
 # setup for Clock GPIO Pins 
-for i in range(3): 
+for i in range(len(clk_pins)): 
     GPIO.setup(clk_pins[i], GPIO.OUT, initial=GPIO.LOW)
     GPIO.output(clk_pins[i], GPIO.HIGH)
 
@@ -150,16 +151,16 @@ def reset():
 # #function to interpret which button was pressed
 def readKeypad(rowNum,char):
     GPIO.output(rowNum, GPIO.HIGH)
-    if GPIO.input(COL_1==1):
+    if GPIO.input(cols[0])==1:
         state = char[0]
 
-    if GPIO.input(COL_2==1):
+    if GPIO.input(cols[1])==1:
         state = char[1]
 
-    if GPIO.input(COL_3==1):
+    if GPIO.input(cols[2])==1:
         state = char[2]
 
-    if GPIO.input(COL_4==1):
+    if GPIO.input(cols[3])==1:
         state = char[3]
 
     GPIO.output(rowNum, GPIO.LOW)
@@ -197,8 +198,8 @@ try:
 
         readKeypad(rows[0], row_layout[0])
         readKeypad(rows[1], row_layout[1])
-        readKeypad(rows[3], row_layout[2])
-        readKeypad(rows[4], row_layout[4])
+        readKeypad(rows[2], row_layout[2])
+        readKeypad(rows[3], row_layout[3])
 
         if str(state) == "#":
             toggle()

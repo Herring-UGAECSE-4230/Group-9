@@ -91,34 +91,14 @@ def reset():
 #function to interpret which button was pressed
 def readKeypad(rowNum,char):
     
-    def hashtag():
+    def hashtag_x():
+        global hashtag
         print("#")
-        if GPIO.output(27, GPIO.LOW) and GPIO.output(22, GPIO.LOW) and GPIO.output(13, GPIO.LOW) and GPIO.output(2, GPIO.LOW) and GPIO.output(5, GPIO.LOW) and GPIO.output(6, GPIO.LOW) and GPIO.output(26, GPIO.LOW) and GPIO.output(3, GPIO.LOW):
-            print("dog")
-            if state==1:
-                one()
-            if state==2:
-                two()
-            if state==3:
-                three()
-            if state==4:
-                four()
-            if state==5:
-                five()
-            if state==6:
-                six()
-            if state==7:
-                seven()
-            if state==8:
-                eight()
-            if state==9:
-                nine()
-            if state==10:
-                star()
-            if hashtag==False:
-                hashtag=True
-            else:
-                hashtag=False
+        if hashtag==True:
+            hashtag=False
+        if hashtag==False:
+            hashtag=True
+        
         else:
             reset()
             
@@ -133,6 +113,7 @@ def readKeypad(rowNum,char):
         state=0
         
     def one():
+        global state
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         state=1
@@ -286,7 +267,6 @@ def readKeypad(rowNum,char):
          #col_1 is 20
         if rowNum==18:
             print("3")
-            reset()
             three()
         if rowNum==23:
             print("6")
@@ -298,7 +278,7 @@ def readKeypad(rowNum,char):
             nine()
         if rowNum==25:
             print("#")
-            hashtag()
+            hashtag_x()
             
         
     if GPIO.input(COL_4)==1:
@@ -355,8 +335,8 @@ def display_number(number):
 #     # Turn on/off the segments based on the number
 #     for i, segment_pin in enumerate(segments):
 #         GPIO.output(segment_pin, numbers[number][i])
-
-
+global state
+state=-1
 try:
     while True:
         readKeypad(ROW_1,['1','4','7','*'])
@@ -364,10 +344,45 @@ try:
         readKeypad(ROW_3,['3','6','9','#'])
         readKeypad(ROW_4,['A','B','C','D'])
         time.sleep(.2)
-        
         toggleClock()
+        while hashtag:
+            toggleClock()
+           
+            reset()
+            print("dog")
+            GPIO.output(ROW_3, GPIO.HIGH)
+            print("fish")
+            if GPIO.input(COL_3)==1:
+                hashtag=False
+                print("wokring to next loop")
+            if hashtag==False:
+                print("cat")
+                if state==1:
+                    one()
+                if state==2:
+                    two()
+                if state==3:
+                    three()
+                if state==4:
+                    four()
+                if state==5:
+                    five()
+                if state==6:
+                    six()
+                if state==7:
+                    seven()
+                if state==8:
+                    eight()
+                if state==9:
+                    nine()
+                if state==10:
+                    star()
+
+            
+        
         
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
         GPIO.cleanup()       
+
 
