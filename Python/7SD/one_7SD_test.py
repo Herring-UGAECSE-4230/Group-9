@@ -57,6 +57,8 @@ def clock():
     GPIO.output(clk1, GPIO.LOW)
     sleep(0.0001)
 
+
+    
 #     if toggle == 1:
 #         for n in range(1):
 #             GPIO.output(clk1, GPIO.HIGH)
@@ -67,8 +69,7 @@ def clock():
 #             GPIO.output(segments[i], GPIO.LOW)  
 #         toggle = 1 
 
-    
-        
+ 
 
     
 # #funtion to call specfic segments and make GPIO HIGH
@@ -91,7 +92,34 @@ def reset():
     GPIO.output(27, GPIO.LOW)
     GPIO.output(3, GPIO.LOW)
 
-def zero():        
+
+display_state = 1  # 1 for ON, 0 for OFF
+hash_count = 0
+#function to interpret which button was pressed
+def readKeypad(rowNum,char):
+   
+    GPIO.setmode(GPIO.BCM)
+    GPIO.output(rowNum, GPIO.HIGH)
+
+    global display_state
+    global hash_count
+    
+    def hashtag():
+        global display_state
+        global hash_count
+        
+        if display_state == 0:  # If display is off
+            print("Display ON")
+            display_state = 1
+            hash_count = 0
+        else:  # If display is on
+            hash_count += 1
+            if hash_count >= 4:  # Toggle display off after four consecutive "#" key presses
+                print("Display OFF")
+                display_state = 0
+                hash_count = 0
+
+    def zero():        
     GPIO.output(27, GPIO.HIGH)
     GPIO.output(22, GPIO.HIGH)
     GPIO.output(13, GPIO.HIGH)
@@ -102,127 +130,121 @@ def zero():
     state=0
     check=0
     
-def one():
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    state=1
-    check=1
-
-def two():
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    GPIO.output(5, GPIO.HIGH)
-    GPIO.output(6, GPIO.HIGH)
-    state=2
-    check=2
-
-def three():
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    GPIO.output(6, GPIO.HIGH)
-    state=3
-    check="3"
-
-def four():
-    GPIO.output(2, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    state=4
-    check="4"
-
-def five():
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(2, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    GPIO.output(6, GPIO.HIGH)
-    state=5
-    check="5"
+    def one():
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        state=1
+        check=1
+    
+    def two():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        state=2
+        check=2
+    
+    def three():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        state=3
+        check="3"
+    
+    def four():
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        state=4
+        check="4"
+    
+    def five():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        state=5
+        check="5"
+            
+    def six():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        state=6
+        check="6"
         
-def six():
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(2, GPIO.HIGH)
-    GPIO.output(5, GPIO.HIGH)
-    GPIO.output(6, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    state=6
-    check="6"
+    def seven():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        state=7
+        check="7"
+        
+    def eight():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        state=8
+    check="8"
     
-def seven():
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    state=7
-    check="7"
+    def nine():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        state=9
+        check="9"
     
-def eight():
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    GPIO.output(2, GPIO.HIGH)
-    GPIO.output(5, GPIO.HIGH)
-    GPIO.output(6, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    state=8
-check="8"
-
-def nine():
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(2, GPIO.HIGH)
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    state=9
-    check="9"
-
-def star():
-    GPIO.output(26, GPIO.HIGH)
-    state=10
-    check="*"
-def a():
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(2, GPIO.HIGH)
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(5, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    state=11
-    check="a"
-def b():
-    GPIO.output(2, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    GPIO.output(5, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    GPIO.output(6, GPIO.HIGH)
-    state=12
-    check="b"
-def c():
-    GPIO.output(27, GPIO.HIGH)
-    GPIO.output(2, GPIO.HIGH)
-    GPIO.output(5, GPIO.HIGH)
-    GPIO.output(6, GPIO.HIGH)
-    state=13
-    check="*"
-def d():
-    GPIO.output(22, GPIO.HIGH)
-    GPIO.output(3, GPIO.HIGH)
-    GPIO.output(5, GPIO.HIGH)
-    GPIO.output(13, GPIO.HIGH)
-    GPIO.output(6, GPIO.HIGH)
-    
-    state=14
-    check="*"
-
-
-#function to interpret which button was pressed
-def readKeypad(rowNum,char):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.output(rowNum, GPIO.HIGH)
+    def star():
+        GPIO.output(26, GPIO.HIGH)
+        state=10
+        check="*"
+    def a():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        state=11
+        check="a"
+    def b():
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        state=12
+        check="b"
+    def c():
+        GPIO.output(27, GPIO.HIGH)
+        GPIO.output(2, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        state=13
+        check="*"
+    def d():
+        GPIO.output(22, GPIO.HIGH)
+        GPIO.output(3, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH)
+        
+        state=14
+        check="*"
 
     if GPIO.input(COL_1)==1:
         #col_1 is 12
@@ -290,7 +312,8 @@ def readKeypad(rowNum,char):
             state = 9
         if rowNum==25:
             print("#")
-            toggleClock()
+            if char == "#":
+                toggle_display()
                 
        
     if GPIO.input(COL_4)==1:
@@ -311,6 +334,9 @@ def readKeypad(rowNum,char):
             print("D")
             d()
             state = 14
+
+    if char == '#':
+    hashtag()
        
     GPIO.output(rowNum, GPIO.LOW)
     # return curVal #check this SIMLINE
