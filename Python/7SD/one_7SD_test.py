@@ -2,8 +2,7 @@ import RPi.GPIO as GPIO
 import time
 from time import sleep
 
-global off
-off = True
+
 
 GPIO.setwarnings(False)
 #BCM numbering
@@ -58,7 +57,6 @@ def clock():
     GPIO.output(clk1, GPIO.LOW)
     sleep(0.0001)
 
-   
 #     if toggle == 1:
 #         for n in range(1):
 #             GPIO.output(clk1, GPIO.HIGH)
