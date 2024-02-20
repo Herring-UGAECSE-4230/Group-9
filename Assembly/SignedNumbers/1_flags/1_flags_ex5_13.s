@@ -36,7 +36,7 @@ _start:
 	ldr 	r4, [r1]	@ r4 = ???
 	ldr 	r5, [r2]	@ r5 = ???
 	adds	r4, r4, r5	@ r4 = r4 + r5 = ???, or does it?
-	str	r4, [r3]	@store result in location
+	str		r4, [r3]	@store result in location
 
 @Second example
 	ldr	r1, =data3
@@ -44,19 +44,10 @@ _start:
 	ldr	r3, =result2
 	
 	ldr 	r4, [r1]	@ r4 = ??
-	ldr	r5, [r2]	@ r5 = ??
+	ldr		r5, [r2]	@ r5 = ??
+	adds	r4, r4, r5	@ r4 = r4 + r5 = ???, or does it?cd
 	adds	r4, r4, r5	@ r4 = r4 + r5 = ???, or does it?
-	str	r4, [r3]	@store result in location
-
-@Third example
-	ldr	r1, =data5
-	ldr	r2, =data6
-	ldr	r3, =result3
-	
-	ldr 	r4, [r1]	@ r4 = ??
-	ldr 	r5, [r2]	@ r5 = ??
-	adds	r4, r4, r5	@ r4 = r4 + r5 = ???, or does it?
-	str	r4, [r3]	@store result in location
+	str		r4, [r3]	@store result in location
 
 @Fourth example
 	ldr	r1, =data7
@@ -66,7 +57,7 @@ _start:
 	ldr 	r4, [r1]	@ r4 = ??
 	ldr 	r5, [r2]	@ r5 = ??
 	adds	r4, r4, r5	@ r4 = r4 + r5 = ???, or does it?
-	str	r4, [r3]	@store result in location
+	str		r4, [r3]	@store result in location
 
 	mov 	r7, #1
 	svc 0
