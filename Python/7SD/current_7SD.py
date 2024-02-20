@@ -71,23 +71,14 @@ GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)#Dp
 #     GPIO.output(clk1, GPIO.LOW)
 #     sleep(0.0001)
 
-def toggleClock():
+def toggleClock(clk_pin):
     # Read the current state of the pin
-    current_state = GPIO.input(clk2)
+    current_state = GPIO.input(clk_pin)
     # Toggle the pin state
     new_state = GPIO.LOW if current_state == GPIO.HIGH else GPIO.HIGH
-    GPIO.output(clk2, new_state)
+    GPIO.output(clk_pin, new_state)
 
-#     
-# #funtion to call specfic segments and make GPIO HIGH
-# def readGPIO(pins):
-#     GPIO.setmode(GPIO.BCM)
-#     
-#     GPIO.setup(22, GPIO.OUT, initial=GPIO.LOW) #B
-#     GPIO.setup(13, GPIO.OUT, initial=GPIO.LOW) #C
-#         
-#     GPIO.output(22, GPIO.HIGH)
-#     GPIO.output(13, GPIO.HIGH)
+
 
 # function that turns all GPIO off 
 def reset():
@@ -240,7 +231,7 @@ def readKeypad(rowNum,char):
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
         state=11
-        check="a"
+        
     
     def b():
         global state
@@ -250,7 +241,7 @@ def readKeypad(rowNum,char):
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         state=12
-        check="b"
+       
     def c():
         global state
         GPIO.output(27, GPIO.HIGH)
@@ -258,7 +249,7 @@ def readKeypad(rowNum,char):
         GPIO.output(5, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         state=13
-        check="*"
+      
     def d():
         global state
         GPIO.output(22, GPIO.HIGH)
@@ -266,11 +257,8 @@ def readKeypad(rowNum,char):
         GPIO.output(5, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
-        
         state=14
-        check="*"
-
-    display=-1
+     
     GPIO.setmode(GPIO.BCM)
     GPIO.output(rowNum, GPIO.HIGH)
 ##################################################
@@ -329,7 +317,10 @@ def readKeypad(rowNum,char):
         if rowNum==25:
             print("#")
             while(True):
-                toggleClock()
+                toggleClock(clk1)
+                toggleClock(clk2)
+                toggleClock(clk3)
+                toggleClock(clk4)
                 reset()
                 sleep(0.2)
                 if GPIO.input(COL_3)==1:
@@ -391,7 +382,7 @@ def readKeypad(rowNum,char):
             state = 14
        
     GPIO.output(rowNum, GPIO.LOW)
-    # return curVal #check this SIMLINE
+
 
 
 #physical keyboard layout
@@ -431,7 +422,10 @@ try:
         readKeypad(ROW_4,['A','B','C','D'])
         time.sleep(.2)
         
-        toggleClock()
+        toggleClock(clk1)
+        toggleClock(clk2)
+        toggleClock(clk3)
+        toggleClock(clk4)
         
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
