@@ -26,7 +26,16 @@ COL_4 = 21
 
 # clock pins
 clk1 = 10 #left most DFF
+clk2 = 9 
+clk3 = 11                                                         
+clk4 = 8 #right most DFF
+
+#GPIO setup for clk pins 
 GPIO.setup(clk1, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(clk2, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(clk3, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
+
 
 # Define the pin numbers for the segments of the 7-segment display
 segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
@@ -64,10 +73,10 @@ GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)#Dp
 
 def toggleClock():
     # Read the current state of the pin
-    current_state = GPIO.input(clk1)
+    current_state = GPIO.input(clk2)
     # Toggle the pin state
     new_state = GPIO.LOW if current_state == GPIO.HIGH else GPIO.HIGH
-    GPIO.output(clk1, new_state)
+    GPIO.output(clk2, new_state)
 
 #     
 # #funtion to call specfic segments and make GPIO HIGH
