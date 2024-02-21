@@ -86,43 +86,33 @@ def setGPIO(character):
     if character in CHARACTER_MAP:
         GPIO.output(CHARACTER_MAP[character], GPIO.HIGH)
         state = list(CHARACTER_MAP.keys()).index(character)
+# 
+#     # Other functions omitted for brevity...
+# 
+#     GPIO.output(rowNum, GPIO.HIGH)
+# 
+#     if GPIO.input(COL_1) == 1:
+#         if rowNum == 18:
+#             print("1")
+#             reset()
+#             one()
+#         # Other conditions omitted for brevity...
+#     elif GPIO.input(COL_2) == 1:
+#         # Implementation for column 2...
+#     elif GPIO.input(COL_3) == 1:
+#         # Implementation for column 3...
+#     elif GPIO.input(COL_4) == 1:
+#         # Implementation for column 4...
+# 
+#     GPIO.output(rowNum, GPIO.LOW)
 
-    # Other functions omitted for brevity...
-
-    GPIO.output(rowNum, GPIO.HIGH)
-
-    if GPIO.input(COL_1) == 1:
-        if rowNum == 18:
-            print("1")
-            reset()
-            one()
-        # Other conditions omitted for brevity...
-    elif GPIO.input(COL_2) == 1:
-        # Implementation for column 2...
-    elif GPIO.input(COL_3) == 1:
-        # Implementation for column 3...
-    elif GPIO.input(COL_4) == 1:
-        # Implementation for column 4...
-
-    GPIO.output(rowNum, GPIO.LOW)
-
-# Function to display a number on 7-segment display
-def display_number(number):
-    numbers = {
-        0: [1, 1, 1, 1, 1, 1, 0, 0],
-        1: [0, 1, 1, 0, 0, 0, 0, 0],
-        # Other number segments omitted for brevity...
-    }
-
-    for i, segment_pin in enumerate(SEGMENT_PINS):
-        GPIO.output(segment_pin, numbers[number][i])
 
 try:
     while True:
-        readKeypad(ROW_1, ['1', '4', '7', '*'])
-        readKeypad(ROW_2, ['2', '5', '8', '0'])
-        readKeypad(ROW_3, ['3', '6', '9', '#'])
-        readKeypad(ROW_4, ['A', 'B', 'C', 'D'])
+        readKeypad(ROW_PINS[0], ['1', '4', '7', '*'])
+        readKeypad(ROW_PINS[1], ['2', '5', '8', '0'])
+        readKeypad(ROW_PINS[2], ['3', '6', '9', '#'])
+        readKeypad(ROW_PINS[3], ['A', 'B', 'C', 'D'])
         time.sleep(.2)
         
         for clk_pin in CLK_PINS:
