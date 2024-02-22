@@ -8,10 +8,13 @@ GPIO.setmode(GPIO.BCM)
 
 #global variables 
 global state #state of each number being pressed; 0-14\
+global pressed
+global counter
 
 #initialized variables
 state = -1 
-
+pressed = -1
+counter = 0
 
 #setting row pins
 ROW_PINS = [18,23,24,25]
@@ -20,20 +23,19 @@ ROW_PINS = [18,23,24,25]
 COL_PINS = [12,16,20,21]
 
 # clock pins
-clk1 = 7 #left most DFF
-clk2 = 5 
-clk3 = 11                                                         
-clk4 = 8 #right most DFF
-
-#GPIO setup for clk pins set to low initially
-GPIO.setup(clk1, GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(clk2, GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(clk3, GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
-
+CLK_PINS = [10, 9, 11, 8]
 
 # Define the pin numbers for the segments of the 7-segment display
-segments = [2, 3, 27, 22, 9, 6, 13, 26] #data pins from DFF
+segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
+
+#GPIO setup for clk pins 
+GPIO.setup(CLK_PINS[0], GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(CLK_PINS[1], GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(CLK_PINS[2], GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(CLK_PINS[3], GPIO.OUT, initial=GPIO.LOW)
+
+
+
 
 #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
 GPIO.setup(ROW_PINS[0], GPIO.OUT, initial=GPIO.LOW)
@@ -48,7 +50,7 @@ GPIO.setup(COL_PINS[1], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(COL_PINS[2], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(COL_PINS[3], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-#initialize all segment pins to low
+#initialize all pins to low
 for pin in segments:
     GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
 
@@ -69,11 +71,11 @@ GPIO.setup(4, GPIO.OUT, initial=GPIO.LOW)
 def toggleClock(clkpin):
     GPIO.output(clkpin, GPIO.HIGH)
     sleep(0.0001)
-    print("clk on")
+    #print("clk on")
 
     GPIO.output(clkpin, GPIO.LOW)
     sleep(0.0001)
-    print("clk off")
+    #print("clk off")
 
 # def toggleClock(clk_pin):
 #     # Read the current state of the pin
@@ -84,22 +86,24 @@ def toggleClock(clkpin):
 
 
 
-# function that turns all segnebt GPIOs off 
+# function that turns all GPIO off 
 def reset():
     GPIO.output(22, GPIO.LOW)
     GPIO.output(13, GPIO.LOW)
     GPIO.output(2, GPIO.LOW)
-    GPIO.output(9, GPIO.LOW)
+    GPIO.output(5, GPIO.LOW)
     GPIO.output(6, GPIO.LOW)
     GPIO.output(26, GPIO.LOW)
     GPIO.output(27, GPIO.LOW)
     GPIO.output(3, GPIO.LOW)
+    print("reset")
 
 
 
 #function to interpret which button was pressed
 def readKeypad(rowNum,char):
-    global state
+    global state, pressed, counter
+    
     def hashtag():
         print("#")
         # checks if all GPIO segments are OFF
@@ -127,8 +131,7 @@ def readKeypad(rowNum,char):
                 if state==9:
                     nine()
                 if state==10:
-                    star()
-                print("woof")
+                    star()                                                                                                                                                                                                                                                                                                                                  
             else:
                 reset()
                 
@@ -138,7 +141,7 @@ def readKeypad(rowNum,char):
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(2, GPIO.HIGH)
-        GPIO.output(9, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         GPIO.output(26, GPIO.HIGH)
         state=0
@@ -154,7 +157,7 @@ def readKeypad(rowNum,char):
         GPIO.output(27, GPIO.HIGH)
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
-        GPIO.output(9, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         state=2
     
@@ -190,7 +193,7 @@ def readKeypad(rowNum,char):
         global state
         GPIO.output(27, GPIO.HIGH)
         GPIO.output(2, GPIO.HIGH)
-        GPIO.output(9, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
@@ -209,7 +212,7 @@ def readKeypad(rowNum,char):
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(2, GPIO.HIGH)
-        GPIO.output(9, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
         state=8
@@ -284,18 +287,26 @@ def readKeypad(rowNum,char):
         #col_1 is 12
         if rowNum==18: 
             print("1")
+            pressed = 1
+            counter += 1
             reset()
             one()
         if rowNum==23:
             print("4")
+            pressed = 1
+            counter += 1
             reset()
             four()
         if rowNum==24:
             print("7")
+            pressed = 1
+            counter += 1
             reset()
             seven()
         if rowNum==25:
             print("*")
+            pressed = 1
+            counter += 1
             reset()
             star()
             
@@ -303,18 +314,26 @@ def readKeypad(rowNum,char):
          #col_ is 16
         if rowNum==18:
             print("2")
+            pressed = 1
+            counter += 1
             reset()
             two()
         if rowNum==23:
             print("5")
+            pressed = 1
+            counter +=1 
             reset()
             five()
         if rowNum==24:
             print("8")
+            pressed = 1
+            counter +=1 
             reset()
             eight()
         if rowNum==25:
             print("0")
+            pressed = 1
+            counter +=1 
             reset()
             zero()
         
@@ -322,23 +341,29 @@ def readKeypad(rowNum,char):
          #col_1 is 20
         if rowNum==18:
             print("3")
+            pressed = 1
+            counter +=1
             reset()
             three()
         if rowNum==23:
             print("6")
+            pressed = 1
+            counter +=1
             reset()
             six()
         if rowNum==24:
             print("9")
+            pressed = 1
+            counter +=1
             reset()
             nine()
         if rowNum==25:
             print("#")
             while(True):
-                toggleClock(clk1)
-                toggleClock(clk2)
-                toggleClock(clk3)
-                toggleClock(clk4)
+                toggleClock(CLK_PINS[0])
+                toggleClock(CLK_PINS[1])
+                toggleClock(CLK_PINS[2])
+                toggleClock(CLK_PINS[3])
                 reset()
                 sleep(0.2)
                 if GPIO.input(COL_PINS[2])==1:
@@ -408,42 +433,94 @@ def readKeypad(rowNum,char):
 print("Press buttons on keypad. Ctrl+C to exit.")
 
 
-# Function to light up segments for a given number
-def display_number(number):
-    # Define the segments required to display each number
-    numbers = {
-        0: [1, 1, 1, 1, 1, 1, 0, 0],
-        1: [0, 1, 1, 0, 0, 0, 0, 0],
-        2: [1, 1, 0, 1, 1, 0, 1, 0],
-        3: [1, 1, 1, 1, 0, 0, 1, 0],
-        4: [0, 1, 1, 0, 0, 1, 1, 0],
-        5: [1, 0, 1, 1, 0, 1, 1, 0],
-        6: [1, 0, 1, 1, 1, 1, 1, 0],
-        7: [1, 1, 1, 0, 0, 0, 0, 0],
-        8: [1, 1, 1, 1, 1, 1, 1, 0],
-        9: [1, 1, 1, 1, 0, 1, 1, 0],
-        10: [0, 0, 0, 0, 0, 0, 0, 1] #dp
-    }
-    i=number
-    print(numbers[i])
 #     
 #     # Turn on/off the segments based on the number
 #     for i, segment_pin in enumerate(segments):
 #         GPIO.output(segment_pin, numbers[number][i])
 
+def clkReset():
+    for clk_pin in CLK_PINS:
+        GPIO.output(clk_pin, GPIO.LOW)
+        #print(f"this clock pin is low:{clk_pin}")
+        
+def clkON():
+    for clk_pin in CLK_PINS:
+        GPIO.output(clk_pin, GPIO.HIGH)
+
+def displaySSD(clk_pin):
+    global pressed
+    global counter
+    
+    GPIO.output(clk_pin, GPIO.HIGH)
+
+    readKeypad(ROW_PINS[0],['1','4','7','*'])
+    readKeypad(ROW_PINS[1],['2','5','8','0'])
+    readKeypad(ROW_PINS[2],['3','6','9','#'])
+    readKeypad(ROW_PINS[3],['A','B','C','D'])
+    print(clk_pin)
+
+    
+    print("pressed success")
+
 
 try:
+    clkON()
+    reset()
+    clkReset()
+    
+    print("1st reset")
     while True:
-        readKeypad(ROW_PINS[0],['1','4','7','*'])
-        readKeypad(ROW_PINS[1],['2','5','8','0'])
-        readKeypad(ROW_PINS[2],['3','6','9','#'])
-        readKeypad(ROW_PINS[3],['A','B','C','D'])
-        time.sleep(.2)
         
-        toggleClock(clk1)
-        toggleClock(clk2)
-        toggleClock(clk3)
-        toggleClock(clk4)
+        while counter != 4:
+            if counter == 0:
+                pressed = -1
+                displaySSD(CLK_PINS[0])
+                GPIO.output(CLK_PINS[0], GPIO.LOW)
+       
+                print(f"this is the counter {counter}")
+                sleep(0.20)
+               
+            if counter == 1:
+                pressed = -1
+                displaySSD(CLK_PINS[1])
+                GPIO.output(CLK_PINS[1], GPIO.LOW)
+
+             
+                print(f"this is the counter {counter}")
+                sleep(0.25)
+                
+            if counter == 2:
+                pressed = -1
+                displaySSD(CLK_PINS[2])
+                GPIO.output(CLK_PINS[2], GPIO.LOW)
+
+        
+                print(f"this is the counter {counter}")
+                sleep(0.25)
+                
+            if counter == 3:
+                pressed = -1
+                displaySSD(CLK_PINS[3])
+                GPIO.output(CLK_PINS[3], GPIO.LOW)
+
+                print(f"this is the counter {counter}")
+                sleep(0.25)
+                
+        while counter == 4:
+            counter-=4
+            sleep(0.25)
+   
+        
+#         readKeypad(ROW_PINS[0],['1','4','7','*'])
+#         readKeypad(ROW_PINS[1],['2','5','8','0'])
+#         readKeypad(ROW_PINS[2],['3','6','9','#'])
+#         readKeypad(ROW_PINS[3],['A','B','C','D'])
+#         time.sleep(.2)
+#         
+#         toggleClock(clk1)
+#         toggleClock(clk2)
+#         toggleClock(clk3)
+#         toggleClock(clk4)
         
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
