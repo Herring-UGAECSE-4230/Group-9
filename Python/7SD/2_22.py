@@ -396,6 +396,9 @@ def SSD1():
     global var
     var = 1
     toggleClock(clk1)
+    toggleClock(clk2)
+    toggleClock(clk3)
+    toggleClock(clk4)
     global pressed
     GPIO.output(clk2, GPIO.LOW)
     GPIO.output(clk3, GPIO.LOW)
@@ -423,7 +426,11 @@ def SSD2():
     global clk4
     global var
     var = 2
+    toggleClock(clk1)
     toggleClock(clk2)
+    toggleClock(clk3)
+    toggleClock(clk4)
+    
     GPIO.output(clk1, GPIO.LOW)
     GPIO.output(clk3, GPIO.LOW)
     GPIO.output(clk4, GPIO.LOW)
@@ -452,7 +459,11 @@ def SSD3():
     global clk4
     global var
     var = 3
+    toggleClock(clk1)
+    toggleClock(clk2)
     toggleClock(clk3)
+    toggleClock(clk4)
+    
     GPIO.output(clk2, GPIO.LOW)
     GPIO.output(clk1, GPIO.LOW)
     GPIO.output(clk4, GPIO.LOW)
@@ -481,13 +492,16 @@ def SSD4():
     global clk3
     global clk4
     global var
+    global pressed
+    toggleClock(clk1)
+    toggleClock(clk2)
+    toggleClock(clk3)
+    toggleClock(clk4) 
     var = 4
     GPIO.output(clk2, GPIO.LOW)
     GPIO.output(clk3, GPIO.LOW)
     GPIO.output(clk1, GPIO.LOW)
-    toggleClock(clk4)
-    global pressed
-  
+      
     #while True:
     readKeypad(ROW_PINS[0],['1','4','7','*'])
     readKeypad(ROW_PINS[1],['2','5','8','0'])
