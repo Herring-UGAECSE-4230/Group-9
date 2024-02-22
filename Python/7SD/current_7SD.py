@@ -20,8 +20,8 @@ ROW_PINS = [18,23,24,25]
 COL_PINS = [12,16,20,21]
 
 # clock pins
-clk1 = 10 #left most DFF
-clk2 = 9 
+clk1 = 7 #left most DFF
+clk2 = 5 
 clk3 = 11                                                         
 clk4 = 8 #right most DFF
 
@@ -33,7 +33,7 @@ GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
 
 
 # Define the pin numbers for the segments of the 7-segment display
-segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
+segments = [2, 3, 27, 22, 9, 6, 13, 26] #data pins from DFF
 
 #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
 GPIO.setup(ROW_PINS[0], GPIO.OUT, initial=GPIO.LOW)
@@ -66,19 +66,21 @@ GPIO.setup(4, GPIO.OUT, initial=GPIO.LOW)
 
 
 #function to toggle on and off clock
-# def toggleClock():
-#     GPIO.output(clk1, GPIO.HIGH)
-#     sleep(0.0001)
+def toggleClock(clkpin):
+    GPIO.output(clkpin, GPIO.HIGH)
+    sleep(0.0001)
+    print("clk on")
 
-#     GPIO.output(clk1, GPIO.LOW)
-#     sleep(0.0001)
+    GPIO.output(clkpin, GPIO.LOW)
+    sleep(0.0001)
+    print("clk off")
 
-def toggleClock(clk_pin):
-    # Read the current state of the pin
-    current_state = GPIO.input(clk_pin)
-    # Toggle the pin state
-    new_state = GPIO.LOW if current_state == GPIO.HIGH else GPIO.HIGH
-    GPIO.output(clk_pin, new_state)
+# def toggleClock(clk_pin):
+#     # Read the current state of the pin
+#     current_state = GPIO.input(clk_pin)
+#     # Toggle the pin state
+#     new_state = GPIO.LOW if current_state == GPIO.HIGH else GPIO.HIGH
+#     GPIO.output(clk_pin, new_state)
 
 
 
