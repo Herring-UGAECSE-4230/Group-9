@@ -23,7 +23,7 @@ ROW_PINS = [18,23,24,25]
 COL_PINS = [12,16,20,21]
 
 # clock pins
-CLK_PINS = [10, 9, 11, 8]
+CLK_PINS = [8, 10, 9, 11]
 
 # Define the pin numbers for the segments of the 7-segment display
 segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
