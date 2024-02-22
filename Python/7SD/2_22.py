@@ -22,7 +22,7 @@ COL_PINS = [12,16,20,21]
 
 # clock pins
 clk1 = 10 #left most DFF
-clk2 = 9 
+clk2 = 5 
 clk3 = 11                                                         
 clk4 = 8 #right most DFF
 
@@ -34,7 +34,7 @@ GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
 
 
 # Define the pin numbers for the segments of the 7-segment display
-segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
+segments = [2, 3, 27, 22, 9, 6, 13, 26] #data pins from DFF
 
 #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
 GPIO.setup(ROW_PINS[0], GPIO.OUT, initial=GPIO.LOW)
@@ -69,7 +69,7 @@ def reset():
     GPIO.output(22, GPIO.LOW)
     GPIO.output(13, GPIO.LOW)
     GPIO.output(2, GPIO.LOW)
-    GPIO.output(5, GPIO.LOW)
+    GPIO.output(9, GPIO.LOW)
     GPIO.output(6, GPIO.LOW)
     GPIO.output(26, GPIO.LOW)
     GPIO.output(27, GPIO.LOW)
@@ -92,7 +92,7 @@ def readKeypad(rowNum,char):
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(2, GPIO.HIGH)
-        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(9, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         GPIO.output(26, GPIO.HIGH)
         state=0
@@ -110,7 +110,7 @@ def readKeypad(rowNum,char):
         GPIO.output(27, GPIO.HIGH)
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
-        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(9, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         state=2
         sleep(.15)
@@ -148,7 +148,7 @@ def readKeypad(rowNum,char):
         global state
         GPIO.output(27, GPIO.HIGH)
         GPIO.output(2, GPIO.HIGH)
-        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(9, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
@@ -169,7 +169,7 @@ def readKeypad(rowNum,char):
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(2, GPIO.HIGH)
-        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(9, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
         state=8
