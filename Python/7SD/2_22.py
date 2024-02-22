@@ -22,7 +22,7 @@ COL_PINS = [12,16,20,21]
 
 # clock pins
 clk1 = 10 #left most DFF
-clk2 = 5 
+clk2 = 9 
 clk3 = 11                                                         
 clk4 = 8 #right most DFF
 
@@ -34,7 +34,7 @@ GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
 
 
 # Define the pin numbers for the segments of the 7-segment display
-segments = [2, 3, 27, 22, 9, 6, 13, 26] #data pins from DFF
+segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
 
 #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
 GPIO.setup(ROW_PINS[0], GPIO.OUT, initial=GPIO.LOW)
@@ -69,7 +69,7 @@ def reset():
     GPIO.output(22, GPIO.LOW)
     GPIO.output(13, GPIO.LOW)
     GPIO.output(2, GPIO.LOW)
-    GPIO.output(9, GPIO.LOW)
+    GPIO.output(5, GPIO.LOW)
     GPIO.output(6, GPIO.LOW)
     GPIO.output(26, GPIO.LOW)
     GPIO.output(27, GPIO.LOW)
@@ -92,7 +92,7 @@ def readKeypad(rowNum,char):
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(2, GPIO.HIGH)
-        GPIO.output(9, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         GPIO.output(26, GPIO.HIGH)
         state=0
@@ -110,7 +110,7 @@ def readKeypad(rowNum,char):
         GPIO.output(27, GPIO.HIGH)
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
-        GPIO.output(9, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         state=2
         sleep(.15)
@@ -148,7 +148,7 @@ def readKeypad(rowNum,char):
         global state
         GPIO.output(27, GPIO.HIGH)
         GPIO.output(2, GPIO.HIGH)
-        GPIO.output(9, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
@@ -169,7 +169,7 @@ def readKeypad(rowNum,char):
         GPIO.output(22, GPIO.HIGH)
         GPIO.output(13, GPIO.HIGH)
         GPIO.output(2, GPIO.HIGH)
-        GPIO.output(9, GPIO.HIGH)
+        GPIO.output(5, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH)
         GPIO.output(3, GPIO.HIGH)
         state=8
@@ -371,45 +371,14 @@ def readKeypad(rowNum,char):
 
    
 
-def SSD4():
-    toggleClock(clk4)
-    global pressed
-    while True:
-        readKeypad(ROW_PINS[0],['1','4','7','*'])
-        readKeypad(ROW_PINS[1],['2','5','8','0'])
-        readKeypad(ROW_PINS[2],['3','6','9','#'])
-        readKeypad(ROW_PINS[3],['A','B','C','D'])
-        if pressed == 1:
-            break
-        
-def SSD3():
-    GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
-    toggleClock(clk3)
-    global pressed
-    while True:
-        readKeypad(ROW_PINS[0],['1','4','7','*'])
-        readKeypad(ROW_PINS[1],['2','5','8','0'])
-        readKeypad(ROW_PINS[2],['3','6','9','#'])
-        readKeypad(ROW_PINS[3],['A','B','C','D'])
-        if pressed == 1:
-            break
 
-def SSD2():
-    toggleClock(clk2)
-    global pressed
-    GPIO.setup(clk3, GPIO.OUT, initial=GPIO.LOW)
-    GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
-    while True:
-        readKeypad(ROW_PINS[0],['1','4','7','*'])
-        readKeypad(ROW_PINS[1],['2','5','8','0'])
-        readKeypad(ROW_PINS[2],['3','6','9','#'])
-        readKeypad(ROW_PINS[3],['A','B','C','D'])
-        if pressed == 1:
-            break
+        
+
+
    
 def SSD1():
-    global pressed
     toggleClock(clk1)
+    global pressed
     GPIO.setup(clk2, GPIO.OUT, initial=GPIO.LOW)
     GPIO.setup(clk3, GPIO.OUT, initial=GPIO.LOW)
     GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
@@ -419,16 +388,82 @@ def SSD1():
         readKeypad(ROW_PINS[2],['3','6','9','#'])
         readKeypad(ROW_PINS[3],['A','B','C','D'])
         if pressed == 1:
-#             sleep(.02)
-            print("Grant Scott Pixley")
+            sleep(.15)
             pressed=-1
+            print("#1 player")
             break
+    print("SSD1 value inputted")
+    #print("go to SSD2")
+    #SSD2()
+    #print("came back from SSD2")
+
+def SSD2():
+    toggleClock(clk2)
+    global pressed
+    GPIO.setup(clk1, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(clk3, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
+    while True:
+        readKeypad(ROW_PINS[0],['1','4','7','*'])
+        readKeypad(ROW_PINS[1],['2','5','8','0'])
+        readKeypad(ROW_PINS[2],['3','6','9','#'])
+        readKeypad(ROW_PINS[3],['A','B','C','D'])
+        if pressed == 1:
+            sleep(.15)
+            pressed=-1
+            print("2 cool for school")
+            break
+    print("SSD2 value inputted")
+    #print("go to SSD3")
+    #SSD3()
+    #print("came back from SSD3")
+        
+def SSD3():
+    toggleClock(clk3)
+    global pressed
+    GPIO.setup(clk1, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(clk2, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
+    while True:
+        readKeypad(ROW_PINS[0],['1','4','7','*'])
+        readKeypad(ROW_PINS[1],['2','5','8','0'])
+        readKeypad(ROW_PINS[2],['3','6','9','#'])
+        readKeypad(ROW_PINS[3],['A','B','C','D'])
+        if pressed == 1:
+            sleep(.15)
+            pressed=-1
+            print("3 is whatever")
+            break
+    print("SSD3 value inputted")
+    #print("go to SSD4")
+    #SSD4()
+    #print("came back from SSD4")
+
+
+def SSD4():
+    toggleClock(clk4)
+    global pressed
+    GPIO.setup(clk1, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(clk2, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(clk3, GPIO.OUT, initial=GPIO.LOW)
+    while True:
+        readKeypad(ROW_PINS[0],['1','4','7','*'])
+        readKeypad(ROW_PINS[1],['2','5','8','0'])
+        readKeypad(ROW_PINS[2],['3','6','9','#'])
+        readKeypad(ROW_PINS[3],['A','B','C','D'])
+        if pressed == 1:
+            sleep(.15)
+            print("4 is cool")
+            break
+    print("done with setting clock")
+    print("                       ")
 
 
 print("Press buttons on keypad. Ctrl+C to exit.")
 
 try:
     while True:
+        #NOTE: in first iteration, 1st ssd does NOT light up...it only light up at the 2nd iteration and along with the 2nd ssd
         SSD1()
         print("SSD1")
         SSD2()
@@ -441,4 +476,3 @@ try:
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
         GPIO.cleanup()       
-
