@@ -20,8 +20,8 @@ ROW_PINS = [18,23,24,25]
 COL_PINS = [12,16,20,21]
 
 # clock pins
-clk1 = 7 #left most DFF
-clk2 = 5 
+clk1 = 10 #left most DFF
+clk2 = 9
 clk3 = 11                                                         
 clk4 = 8 #right most DFF
 
@@ -33,7 +33,7 @@ GPIO.setup(clk4, GPIO.OUT, initial=GPIO.LOW)
 
 
 # Define the pin numbers for the segments of the 7-segment display
-segments = [2, 3, 27, 22, 9, 6, 13, 26] #data pins from DFF
+segments = [2, 3, 27, 22, 5, 6, 13, 26] #data pins from DFF
 
 #from instructions: GPIO pins connected to the 'X' lines will be setup as inputs to the pad/output from the PI
 GPIO.setup(ROW_PINS[0], GPIO.OUT, initial=GPIO.LOW)

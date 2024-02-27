@@ -385,6 +385,7 @@ def clkReset():
 def clkON():
     for clk_pin in CLK_PINS:
         GPIO.output(clk_pin, GPIO.HIGH)
+        print(clk_pin)
 
 def displaySSD(clk_pin):
     global pressed, counter, waiting, invalid 
@@ -433,15 +434,23 @@ def blink(clk_pin):
     sleep(.15)
     GPIO.output(clk_pin, GPIO.HIGH)
     
+def start():
+    global state
+    #clkON()
+    GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
+    state=0
 
 
 try:
     clkON()
-    reset()
-    clkReset()
-    
+    #reset()
+    #start()
+    #clkReset()
+    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+    GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
     while True:
-        
+      
+       
         while counter != 4: # while count is no equal to 4, will run the if statements
             blink(CLK_PINS[counter])
             
@@ -586,7 +595,7 @@ try:
                 
         while counter == 4:
             GPIO.output(CLK_PINS[3], GPIO.HIGH) #stores the value of the SSD4
-            counter-= 4
+            #counter-= 4
             sleep(0.25)
         
 except KeyboardInterrupt:
