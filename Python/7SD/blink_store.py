@@ -407,20 +407,16 @@ def segON():
 
 def blink(clk_pin):
     global pressed
+    toggleClock(clk_pin)
+    segON()
+    sleep(.15)
     GPIO.output(clk_pin, GPIO.HIGH)
     GPIO.output(clk_pin, GPIO.LOW)
-    if pressed == -1:
-        segON()
-    else:
-        reset()
-    toggleClock(clk_pin)
-    sleep(0.15)
-    if pressed == -1:
-        reset()
-    sleep(0.15)
-    GPIO.output(clk_pin, GPIO.LOW)
+    reset()
     sleep(.15)
+    GPIO.output(clk_pin, GPIO.HIGH)
     
+
 
 try:
     clkON()
@@ -432,8 +428,11 @@ try:
         
         while counter != 4: # while count is no equal to 4, will run the if statements
             blink(CLK_PINS[counter])
+            
             if counter == 0: # when counter = 0 -> corresponds to SSD1
                 pressed = -1
+                GPIO.output(CLK_PINS[3], GPIO.HIGH)
+                
                 displaySSD(CLK_PINS[0]) #calls displaySSD function to display on SSD
                 GPIO.output(CLK_PINS[0], GPIO.LOW) # turns clk1 off 
                 print(f"this is the counter {counter}")
@@ -441,6 +440,15 @@ try:
                
             if counter == 1:
                 pressed = -1
+                
+                GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                if state==0:
+                    GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
+                if state==1: # if state == (0-14) then it will call each numbers function to turn the GPIO segments ON 
+                    GPIO.output([22,13], GPIO.HIGH)
+                if state==2:
+                    GPIO.output([27,22,3,5,6], GPIO.HIGH)
+                
                 displaySSD(CLK_PINS[1])
                 GPIO.output(CLK_PINS[1], GPIO.LOW)
                 print(f"this is the counter {counter}")
@@ -448,6 +456,16 @@ try:
                 
             if counter == 2:
                 pressed = -1
+                
+                GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                if state==0:
+                    GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
+                if state==1: # if state == (0-14) then it will call each numbers function to turn the GPIO segments ON 
+                    GPIO.output([22,13], GPIO.HIGH)
+                if state==2:
+                    GPIO.output([27,22,3,5,6], GPIO.HIGH)
+                
+                
                 displaySSD(CLK_PINS[2])
                 GPIO.output(CLK_PINS[2], GPIO.LOW)
                 print(f"this is the counter {counter}")
@@ -455,6 +473,16 @@ try:
                 
             if counter == 3:
                 pressed = -1
+                
+                GPIO.output(CLK_PINS[2], GPIO.HIGH)
+                if state==0:
+                    GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
+                if state==1: # if state == (0-14) then it will call each numbers function to turn the GPIO segments ON 
+                    GPIO.output([22,13], GPIO.HIGH)
+                if state==2:
+                    GPIO.output([27,22,3,5,6], GPIO.HIGH)
+                
+                
                 displaySSD(CLK_PINS[3])
                 GPIO.output(CLK_PINS[3], GPIO.LOW)
                 print(f"this is the counter {counter}")
@@ -467,5 +495,6 @@ try:
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
         GPIO.cleanup()       
+
 
 

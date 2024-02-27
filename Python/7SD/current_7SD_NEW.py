@@ -71,11 +71,11 @@ GPIO.setup(4, GPIO.OUT, initial=GPIO.LOW)
 def toggleClock(clkpin):
     GPIO.output(clkpin, GPIO.HIGH)
     sleep(0.0001)
-    #print("clk on")
+    print("clk on")
 
     GPIO.output(clkpin, GPIO.LOW)
     sleep(0.0001)
-    #print("clk off")
+    print("clk off")
 
 # def toggleClock(clk_pin):
 #     # Read the current state of the pin
