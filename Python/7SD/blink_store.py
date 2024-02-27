@@ -11,13 +11,13 @@ global state #state of each number being pressed; 0-14\
 global pressed
 global counter
 global new
-
+global invalid 
 
 #initialized variables
 state = -1 
 pressed = -1
 counter = 0
-new = counter 
+invalid = 0 
 
 
 #setting row pins
@@ -81,7 +81,7 @@ def reset():
 
 #function to interpret which button was pressed
 def readKeypad(rowNum,char):
-    global state, pressed, counter, new
+    global state, pressed, counter, invalid
     
     def hashtag():
         print("#")
@@ -144,8 +144,6 @@ def readKeypad(rowNum,char):
         GPIO.output([27,2,3,13,6], GPIO.HIGH)
         state=5
         
-        
-
     def six():
         global state
         GPIO.output([27,2,5,6,13,3], GPIO.HIGH)
@@ -172,33 +170,36 @@ def readKeypad(rowNum,char):
         state=10
         
     def a():
-        global state
+        global state, invalid
         GPIO.output(4, GPIO.HIGH)
         sleep(.5)
         GPIO.output(4,GPIO.LOW)
         state=11
-        
+        invalid = 1
     
     def b():
-        global state
+        global state, invalid
         GPIO.output(4, GPIO.HIGH)
         sleep(.5)
         GPIO.output(4,GPIO.LOW)
         state=12
+        invalid = 1
        
     def c():
-        global state
+        global state, invalid
         GPIO.output(4, GPIO.HIGH)
         sleep(.5)
         GPIO.output(4,GPIO.LOW)
         state=13
+        invalid = 1
       
     def d():
-        global state
+        global state, invalid
         GPIO.output(4, GPIO.HIGH)
         sleep(.5)
         GPIO.output(4,GPIO.LOW)
         state=14
+        invalid = 1
      
     GPIO.setmode(GPIO.BCM)
     GPIO.output(rowNum, GPIO.HIGH)
@@ -209,28 +210,27 @@ def readKeypad(rowNum,char):
             print("1")
             pressed = 1
             counter += 1
-            new 
             reset()
             one()
         if rowNum==23:
             print("4")
             pressed = 1
             counter += 1
-            new 
+            
             reset()
             four()
         if rowNum==24:
             print("7")
             pressed = 1
             counter += 1
-            new
+           
             reset()
             seven()
         if rowNum==25:
             print("*")
             pressed = 1
             counter += 1
-            new
+           
             reset()
             star()
             
@@ -240,28 +240,28 @@ def readKeypad(rowNum,char):
             print("2")
             pressed = 1
             counter += 1
-            new
+            
             reset()
             two()
         if rowNum==23:
             print("5")
             pressed = 1
             counter +=1
-            new
+         
             reset()
             five()
         if rowNum==24:
             print("8")
             pressed = 1
             counter +=1
-            new
+         
             reset()
             eight()
         if rowNum==25:
             print("0")
             pressed = 1
             counter +=1
-            new
+         
             reset()
             zero()
         
@@ -271,21 +271,21 @@ def readKeypad(rowNum,char):
             print("3")
             pressed = 1
             counter +=1
-            new
+         
             reset()
             three()
         if rowNum==23:
             print("6")
             pressed = 1
             counter +=1
-            new
+            
             reset()
             six()
         if rowNum==24:
             print("9")
             pressed = 1
             counter +=1
-            new
+         
             reset()
             nine()
         if rowNum==25:
@@ -322,12 +322,16 @@ def readKeypad(rowNum,char):
                             star()
                         if state==11:
                             a()
+                            invalid = 1
                         if state==12:
                             b()
+                            invalid = 1
                         if state==13:
                             c()
+                            invalid = 1
                         if state==14:
                             d()
+                            invalid = 1
                         break
                                     
             
@@ -339,21 +343,25 @@ def readKeypad(rowNum,char):
             reset()
             a()
             state = 11
+            invalid = 1
         if rowNum==23:
             print("B")
             reset()
             b()
             state = 12
+            invalid = 1
         if rowNum==24:
             print("C")
             reset()
             c()
             state = 13
+            invalid = 1
         if rowNum==25:
             print("D")
             reset()
             d()
             state = 14
+            invalid = 1
        
     GPIO.output(rowNum, GPIO.LOW)
 
@@ -379,17 +387,26 @@ def clkON():
         GPIO.output(clk_pin, GPIO.HIGH)
 
 def displaySSD(clk_pin):
-    global pressed
-    global counter
-    global waiting
+    global pressed, counter, waiting, invalid 
+
     
     GPIO.output(clk_pin, GPIO.HIGH)
-    readKeypad(ROW_PINS[0],['1','4','7','*'])
-    readKeypad(ROW_PINS[1],['2','5','8','0'])
-    readKeypad(ROW_PINS[2],['3','6','9','#'])
-    readKeypad(ROW_PINS[3],['A','B','C','D'])
-    print(clk_pin)
-    print("pressed success")
+    
+    if invalid == 0: # false 
+        readKeypad(ROW_PINS[0],['1','4','7','*'])
+        readKeypad(ROW_PINS[1],['2','5','8','0'])
+        readKeypad(ROW_PINS[2],['3','6','9','#'])
+
+        
+        print(clk_pin)
+        print("pressed success")
+        print(invalid)
+        
+    elif invalid == 1: # true, if ABCD is pressed
+        GPIO.output(4, GPIO.HIGH)
+        readKeypad(ROW_PINS[3],['A','B','C','D'])
+        print(invalid)
+        
 
 def segON():
     GPIO.output([22,13,2,5,6,26,27,3], GPIO.HIGH)
@@ -425,46 +442,97 @@ try:
     
     while True:
         
-        
         while counter != 4: # while count is no equal to 4, will run the if statements
             blink(CLK_PINS[counter])
             
             if counter == 0: # when counter = 0 -> corresponds to SSD1
                 pressed = -1
-                GPIO.output(CLK_PINS[3], GPIO.HIGH)
-                
+                    
                 displaySSD(CLK_PINS[0]) #calls displaySSD function to display on SSD
                 GPIO.output(CLK_PINS[0], GPIO.LOW) # turns clk1 off 
                 print(f"this is the counter {counter}")
-                sleep(0.20)
+                sleep(0.15)
                
             if counter == 1:
                 pressed = -1
                 
-                GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                GPIO.output(CLK_PINS[0], GPIO.HIGH) #stores the value of the SSD1
                 if state==0:
                     GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
                 if state==1: # if state == (0-14) then it will call each numbers function to turn the GPIO segments ON 
                     GPIO.output([22,13], GPIO.HIGH)
                 if state==2:
                     GPIO.output([27,22,3,5,6], GPIO.HIGH)
-                
+                if state==3:
+                    GPIO.output([27,22,3,13,6], GPIO.HIGH)
+                if state==4:
+                    GPIO.output([2,3,22,13], GPIO.HIGH)
+                if state==5:
+                    GPIO.output([27,2,3,13,6], GPIO.HIGH)
+                if state==6:
+                    GPIO.output([27,2,5,6,13,3], GPIO.HIGH)
+                if state==7:
+                    GPIO.output([27,22,13], GPIO.HIGH)
+                if state==8:
+                    GPIO.output([27,22,13,2], GPIO.HIGH)
+                if state==9:
+                    GPIO.output([27,2,22,3,13], GPIO.HIGH)
+                if state==10:
+                    GPIO.output(26, GPIO.HIGH)
+            ###################################################
+                if state==11:
+                    invalid = 1
+                if state==12:
+                    invalid = 1
+                if state==13:
+                    invalid = 1
+                if state==14:
+                    invalid = 1
+        
                 displaySSD(CLK_PINS[1])
                 GPIO.output(CLK_PINS[1], GPIO.LOW)
                 print(f"this is the counter {counter}")
-                sleep(0.25)
+                sleep(0.15)
                 
             if counter == 2:
                 pressed = -1
                 
-                GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                GPIO.output(CLK_PINS[1], GPIO.HIGH) #stores the value of the SSD2
                 if state==0:
                     GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
                 if state==1: # if state == (0-14) then it will call each numbers function to turn the GPIO segments ON 
                     GPIO.output([22,13], GPIO.HIGH)
                 if state==2:
                     GPIO.output([27,22,3,5,6], GPIO.HIGH)
-                
+                if state==3:
+                    GPIO.output([27,22,3,13,6], GPIO.HIGH)
+                if state==4:
+                    GPIO.output([2,3,22,13], GPIO.HIGH)
+                if state==5:
+                    GPIO.output([27,2,3,13,6], GPIO.HIGH)
+                if state==6:
+                    GPIO.output([27,2,5,6,13,3], GPIO.HIGH)
+                if state==7:
+                    GPIO.output([27,22,13], GPIO.HIGH)
+                if state==8:
+                    GPIO.output([27,22,13,2], GPIO.HIGH)
+                if state==9:
+                    GPIO.output([27,2,22,3,13], GPIO.HIGH)
+                if state==10:
+                    GPIO.output(26, GPIO.HIGH)
+                 ###################################################
+                if state==11:
+                    #GPIO.output(4, GPIO.HIGH)
+                    invalid = 1
+                if state==12:
+                    #GPIO.output(4, GPIO.HIGH)
+                    invalid = 1
+                if state==13:
+                    #GPIO.output(4, GPIO.HIGH)
+                    invalid = 1
+                if state==14:
+                    #GPIO.output(4, GPIO.HIGH)
+                    invalid = 1
                 
                 displaySSD(CLK_PINS[2])
                 GPIO.output(CLK_PINS[2], GPIO.LOW)
@@ -474,14 +542,42 @@ try:
             if counter == 3:
                 pressed = -1
                 
-                GPIO.output(CLK_PINS[2], GPIO.HIGH)
+                GPIO.output(CLK_PINS[2], GPIO.HIGH) #stores the value of the SSD3
                 if state==0:
                     GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
                 if state==1: # if state == (0-14) then it will call each numbers function to turn the GPIO segments ON 
                     GPIO.output([22,13], GPIO.HIGH)
                 if state==2:
                     GPIO.output([27,22,3,5,6], GPIO.HIGH)
-                
+                if state==3:
+                    GPIO.output([27,22,3,13,6], GPIO.HIGH)
+                if state==4:
+                    GPIO.output([2,3,22,13], GPIO.HIGH)
+                if state==5:
+                    GPIO.output([27,2,3,13,6], GPIO.HIGH)
+                if state==6:
+                    GPIO.output([27,2,5,6,13,3], GPIO.HIGH)
+                if state==7:
+                    GPIO.output([27,22,13], GPIO.HIGH)
+                if state==8:
+                    GPIO.output([27,22,13,2], GPIO.HIGH)
+                if state==9:
+                    GPIO.output([27,2,22,3,13], GPIO.HIGH)
+                if state==10:
+                    GPIO.output(26, GPIO.HIGH)
+                 ###################################################
+                if state==11:
+                    #GPIO.output(4, GPIO.HIGH)
+                    invalid = 1
+                if state==12:
+                    #GPIO.output(4, GPIO.HIGH)
+                    invalid = 1
+                if state==13:
+                    #GPIO.output(4, GPIO.HIGH)
+                    invalid = 1
+                if state==14:
+                    #GPIO.output(4, GPIO.HIGH)
+                    invalid = 1
                 
                 displaySSD(CLK_PINS[3])
                 GPIO.output(CLK_PINS[3], GPIO.LOW)
@@ -489,6 +585,7 @@ try:
                 sleep(0.25)
                 
         while counter == 4:
+            GPIO.output(CLK_PINS[3], GPIO.HIGH) #stores the value of the SSD4
             counter-= 4
             sleep(0.25)
         
