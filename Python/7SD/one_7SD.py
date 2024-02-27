@@ -49,19 +49,20 @@ GPIO.setup(3, GPIO.OUT, initial=GPIO.LOW)#G
 GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)#Dp
 
 #function to toggle on and off clock
-# def toggleClock():
-#     GPIO.output(clk1, GPIO.HIGH)
-#     sleep(0.0001)
-
-#     GPIO.output(clk1, GPIO.LOW)
-#     sleep(0.0001)
-
 def toggleClock():
-    # Read the current state of the pin
-    current_state = GPIO.input(clk1)
-    # Toggle the pin state
-    new_state = GPIO.LOW if current_state == GPIO.HIGH else GPIO.HIGH
-    GPIO.output(clk1, new_state)
+    GPIO.output(clk1, GPIO.HIGH)
+    sleep(0.0001)
+    print("clock on")
+    GPIO.output(clk1, GPIO.LOW)
+    sleep(0.0001)
+    print("clock off")
+    
+# def toggleClock():
+#     # Read the current state of the pin
+#     current_state = GPIO.input(clk1)
+#     # Toggle the pin state
+#     new_state = GPIO.LOW if current_state == GPIO.HIGH else GPIO.HIGH
+#     GPIO.output(clk1, new_state)
 
 #     
 # #funtion to call specfic segments and make GPIO HIGH
@@ -357,15 +358,32 @@ def display_number(number):
 #         GPIO.output(segment_pin, numbers[number][i])
 
 
+def segON():
+    for seg in segments:
+        GPIO.output(seg, GPIO.HIGH)
+    
+
+def blink():
+    segON() #turns on all segment pins
+    print("segments on")
+#     sleep(0.5) # delay 
+#     reset() # turns off all segment pins 
+#     sleep(0.5)
+#     print("blink")
+    
+    
 try:
     while True:
+        toggleClock()
+        blink()
+        sleep(3)
         readKeypad(ROW_1,['1','4','7','*'])
         readKeypad(ROW_2,['2','5','8','0'])
         readKeypad(ROW_3,['3','6','9','#'])
         readKeypad(ROW_4,['A','B','C','D'])
         time.sleep(.2)
         
-        toggleClock()
+    
         
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
