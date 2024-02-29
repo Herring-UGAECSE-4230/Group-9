@@ -524,6 +524,7 @@ def datetime_A():
         hour_string= str(current_time.hour) #converts current hour to string
         hour_digits_list = [int(digit) for digit in hour_string] #makes a list of the hour digits
         minute_fun()
+        dot()
         
     elif (0<hour<12) and yeah == 1: #it is the morning
         yeah = 0
@@ -533,8 +534,10 @@ def datetime_A():
         if len(hour_digits_list)==1: #if only one digit is in the hour list 
             hour_digits_list.insert(0,0) #add a 0 at index 0 to the list
             minute_fun()
+            dot()
         else:
             minute_fun()
+            
         yeah=0
             
     elif (hour>12) and yeah == 1: #it is the night            #add a dot indicating Pm!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -546,8 +549,10 @@ def datetime_A():
         if len(hour_digits_list)==1: #if only one digit is in the hour list 
             hour_digits_list.insert(0,0) #add a 0 at index 0 to the list
             minute_fun()
+            dot()
         else:
             minute_fun()
+            dot()
     
     combined_list = hour_digits_list + minute_digits_list
 #     print(f"hour digit list: {hour_digits_list}")

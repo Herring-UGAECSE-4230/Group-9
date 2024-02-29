@@ -542,6 +542,7 @@ def datetime_A():
         hour_string= str(current_time.hour) #converts current hour to string
         hour_digits_list = [int(digit) for digit in hour_string] #makes a list of the hour digits
         minute_fun()
+        dot()
         
     elif (0<hour<12) and yeah == 1: #it is the morning
         yeah = 0
@@ -564,8 +565,10 @@ def datetime_A():
         if len(hour_digits_list)==1: #if only one digit is in the hour list 
             hour_digits_list.insert(0,0) #add a 0 at index 0 to the list
             minute_fun()
+            dot()
         else:
             minute_fun()
+            dot()
     
     combined_list = hour_digits_list + minute_digits_list
     print(f"list of H,h,M,m: {combined_list}")
@@ -696,7 +699,7 @@ def B_mode():
                     GPIO.output([2,3,22,13], GPIO.HIGH)
                     GPIO.output(CLK_PINS[1], GPIO.HIGH)
                     dot()  
-                    dot()
+                 
                     print("make display 02")
                     
                 if manual_ssd2==5:
@@ -836,6 +839,16 @@ def B_mode():
             
     while counter == 4:
         GPIO.output(CLK_PINS[3], GPIO.HIGH) #stores the value of the SSD4
+        readKeypad(ROW_PINS[0],['1','4','7','*'])
+        readKeypad(ROW_PINS[1],['2','5','8','0'])
+        readKeypad(ROW_PINS[2],['3','6','9','#'])
+        readKeypad(ROW_PINS[3],['A','B','C','D'])
+        
+        if state == 25:
+            clkReset() # turns clk OFF
+            reset() #setting all pins to low
+            clkON() #turn on all clock
+    
         sleep(0.25)
                  
 # list that gets hours & minutes, combines them in a list, and then each item in the list is passed to their respective SSDs that are to be displayed
@@ -849,17 +862,18 @@ ssd_4 = combined_list[3]
 def auto(clk_current,clk_prev,ssd):
     GPIO.output(clk_prev, GPIO.HIGH)
     state_fuc_a(ssd)
-    dot()
     GPIO.output(clk_current, GPIO.HIGH)
     state_fuc_a(ssd)
     GPIO.output(clk_current, GPIO.LOW)
     print(f"ssd1 {ssd}")
     sleep(0.5)
+   
 
 
 # a-mode function: keypad returns program back to datetime and setting clock mode
 def A_mode():
     global restart
+ 
     auto(CLK_PINS[0],CLK_PINS[3], ssd_1)
     auto(CLK_PINS[1],CLK_PINS[0], ssd_2)
     auto(CLK_PINS[2],CLK_PINS[1], ssd_3)
