@@ -10,7 +10,7 @@ GPIO.setmode(GPIO.BCM)
 
 #global variables 
 global state, pressed, counter, new, invalid, waiting_for_valid_input, LED #state of each number being pressed; 0-14\
-global eastern, current_time, hour, minute_string, minute_digits_list, yeah
+global eastern, current_time, hour, minute_string, minute_digits_list, yeah, combined_list, hour_digits_list
 global counter_a, ssd_1, ssd_2, ssd_3, ssd_4
 
 #initialized variables
@@ -21,6 +21,7 @@ counter_a = 0
 invalid = 0
 waiting_for_valid_input = 0
 yeah = 1
+
 
 
 #initializes var associated with time
@@ -73,16 +74,15 @@ GPIO.setup(4, GPIO.OUT, initial=GPIO.LOW)
 def toggleClock(clkpin):
     GPIO.output(clkpin, GPIO.HIGH)
     sleep(0.0001)
-    print("clk on")
-
+    
     GPIO.output(clkpin, GPIO.LOW)
     sleep(0.0001)
-    print("clk off")
+
 
 # function that turns all GPIO off 
 def reset():
     GPIO.output([22,13,2,5,6,26,27,3], GPIO.LOW)
-    print("og reset")
+ 
 
 #function to interpret which button was pressed
 def readKeypad(rowNum,char):
@@ -395,7 +395,7 @@ def clkReset():
 def clkON():
     for clk_pin in CLK_PINS:
         GPIO.output(clk_pin, GPIO.HIGH)
-        print(clk_pin)
+#         print(clk_pin)
 
 #function to display a value on a SSD
 def displaySSD(clk_pin):
@@ -410,7 +410,7 @@ def displaySSD(clk_pin):
         readKeypad(ROW_PINS[2],['3','6','9','#'])
         readKeypad(ROW_PINS[3],['A','B','C','D'])
         
-        print(clk_pin)
+#         print(clk_pin)
         
     elif invalid == 1: # true, if ABCD is pressed
         GPIO.output(4, GPIO.HIGH)
@@ -442,12 +442,12 @@ def minute_fun():
     if len(minute_digits_list)==1:
         minute_digits_list.insert(0,0) #add a 0 at index 0 to the list
     else:
-        
         pass
-    print(f"minute digits: {minute_digits_list}")
+#     print(f"minute digits: {minute_digits_list}")
 
+#function to get the current hour and minutes and convert them to a list
 def datetime_A():
-    global eastern, current_time, hour, minute_string, minute_digits_list, yeah
+    global eastern, current_time, hour, minute_string, minute_digits_list, yeah, combined_list, hour_digits_list
     
     if hour==0 and yeah == 1: #it is 12 am
         yeah = 0
@@ -464,7 +464,6 @@ def datetime_A():
         yeah = 0
         hour_string= str(current_time.hour) #converts current hour to string
         hour_digits_list = [int(digit) for digit in hour_string] #makes a list of the hour digits
-        print("hooooooooooooooooooo")
         minute_fun()
         
     elif (0<hour<12) and yeah == 1: #it is the morning
@@ -476,6 +475,7 @@ def datetime_A():
             minute_fun()
         else:
             minute_fun()
+        yeah=0
             
     elif (hour>12) and yeah == 1: #it is the night            #add a dot indicating Pm!!!!!!!!!!!!!!!!!!!!!!!!!
         yeah = 0
@@ -489,9 +489,10 @@ def datetime_A():
             minute_fun()
     
     combined_list = hour_digits_list + minute_digits_list
-    return combined_list
-    print(f"hour digit list: {hour_digits_list}")
+#     print(f"hour digit list: {hour_digits_list}")
     print(f"list of H,h,M,m: {combined_list}")
+    return combined_list
+    
 
             
     #return minute_digits_list
@@ -521,6 +522,7 @@ def state_fuc():
         GPIO.output(26, GPIO.HIGH)
         
 def state_fuc_a(state):
+    reset()
     if state==0:
         return GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
     if state==1: # if state == (0-14) then it will call each numbers function to turn the GPIO segments ON 
@@ -555,13 +557,13 @@ def B_mode():
             state_fuc()
             displaySSD(CLK_PINS[0]) #calls displaySSD function to display on SSD
             GPIO.output(CLK_PINS[0], GPIO.LOW) # turns clk1 off 
-            print(f"this is the counter {counter}")
+# #             print(f"this is the counter {counter}")
             sleep(0.15)
             
         if counter == 1:
             pressed = -1
          
-            print(f"state: {state}")
+#             print(f"state: {state}")
             GPIO.output(CLK_PINS[0], GPIO.HIGH) #stores the value of the SSD1
             state_fuc()
 
@@ -576,12 +578,12 @@ def B_mode():
     
             displaySSD(CLK_PINS[1])
             GPIO.output(CLK_PINS[1], GPIO.LOW)
-            print(f"this is the counter {counter}")
+#             print(f"this is the counter {counter}")
             sleep(0.15)
             
         if counter == 2:
             pressed = -1
-            print(f"state: {state}")
+#             print(f"state: {state}")
             GPIO.output(CLK_PINS[1], GPIO.HIGH) #stores the value of the SSD2
             state_fuc()
     
@@ -596,13 +598,13 @@ def B_mode():
             
             displaySSD(CLK_PINS[2])
             GPIO.output(CLK_PINS[2], GPIO.LOW)
-            print(f"this is the counter {counter}")
+#             print(f"this is the counter {counter}")
             sleep(0.25)
             
         if counter == 3:
             pressed = -1
            
-            print(f"state: {state}")
+#             print(f"state: {state}")
             GPIO.output(CLK_PINS[2], GPIO.HIGH) #stores the value of the SSD3
             state_fuc()
 
@@ -621,7 +623,7 @@ def B_mode():
             
             displaySSD(CLK_PINS[3])
             GPIO.output(CLK_PINS[3], GPIO.LOW)
-            print(f"this is the counter {counter}")
+#             print(f"this is the counter {counter}")
             sleep(0.25)
             
     while counter == 4:
@@ -635,14 +637,6 @@ ssd_2 = combined_list[1]
 ssd_3 = combined_list[2]
 ssd_4 = combined_list[3]
 
-
-def A_mode():
-    global counter_a, ssd_1, ssd_2, ssd_3, ssd_4
-    print("AAAAAA")
-    
-    
-
-
 def displaySSD_H(clk_current,clk_prev,ssd):
     GPIO.output(clk_prev, GPIO.HIGH)
     state_fuc_a(ssd)
@@ -651,23 +645,88 @@ def displaySSD_H(clk_current,clk_prev,ssd):
     GPIO.output(clk_current, GPIO.LOW)
     print(f"ssd1 {ssd}")
     sleep(0.5)
-def displaySSD_h(clk_current,clk_prev,ssd):
-    GPIO.output(clk_prev, GPIO.HIGH)
-    state_fuc_a(ssd)
-    GPIO.output(clk_current, GPIO.HIGH)
-    state_fuc_a(ssd)
-    GPIO.output(clk_current, GPIO.LOW)
-    print(f"ssd1 {ssd}")
-    sleep(0.5)
-def displaySSD_M(clk_current,clk_prev,ssd):
-    GPIO.output(clk_prev, GPIO.HIGH)
-    state_fuc_a(ssd)
-    GPIO.output(clk_current, GPIO.HIGH)
-    state_fuc_a(ssd)
-    GPIO.output(clk_current, GPIO.LOW)
-    print(f"ssd1 {ssd}")
-    sleep(0.5)
-def displaySSD_m(clk_current,clk_prev,ssd):
+
+def A_mode():
+    global counter_a, ssd_1, ssd_2, ssd_3, ssd_4
+    print("AAAAAA")
+    
+    while counter_a != 4: # while count is no equal to 4, will run the if statements
+        if counter_a == 0: # when counter = 0 -> corresponds to SSD1
+            state1 = ssd_1
+            GPIO.output(CLK_PINS[0],GPIO.LOW)
+            state_fuc_a(state1)
+            GPIO.output(CLK_PINS[0], GPIO.HIGH) # turns clk1 off
+            counter_a+=1
+            sleep(0.5)
+            
+        if counter_a == 1:
+            GPIO.output(CLK_PINS[0], GPIO.HIGH) # turns clk1 off 
+            state2 = ssd_2
+            GPIO.output(CLK_PINS[1], GPIO.LOW)
+            state_fuc_a(state2)
+            GPIO.output(CLK_PINS[1], GPIO.HIGH) # turns clk1 off
+            counter_a+=1
+            sleep(0.5)
+#                     
+        if counter == 2:
+            GPIO.output(CLK_PINS[1], GPIO.HIGH) # turns clk1 off 
+            state3 = ssd_3
+            GPIO.output(CLK_PINS[2], GPIO.LOW)
+            state_fuc_a(state3)
+            GPIO.output(CLK_PINS[2], GPIO.HIGH) # turns clk1 off
+            counter_a+=1
+            sleep(0.5)
+        
+        if counter == 3:
+            GPIO.output(CLK_PINS[2], GPIO.HIGH) # turns clk1 off 
+            state4 = ssd_4
+            GPIO.output(CLK_PINS[3], GPIO.LOW)
+            state_fuc_a(state4)
+            GPIO.output(CLK_PINS[3], GPIO.HIGH) # turns clk1 off
+            counter_a+=1
+            sleep(0.5)
+            
+    while counter == 4:
+        GPIO.output(CLK_PINS[3], GPIO.HIGH) #stores the value of the SSD4
+        #counter-= 4
+        sleep(0.25)
+    
+    
+# def displaySSD_H(clk_current,clk_prev,ssd):
+#     GPIO.output(clk_prev, GPIO.HIGH)
+#     state_fuc_a(ssd)
+#     GPIO.output(clk_current, GPIO.HIGH)
+#     state_fuc_a(ssd)
+#     GPIO.output(clk_current, GPIO.LOW)
+#     print(f"ssd1 {ssd}")
+#     sleep(0.5)
+# def displaySSD_h(clk_current,clk_prev,ssd):
+#     GPIO.output(clk_prev, GPIO.HIGH)
+#     state_fuc_a(ssd)
+#     GPIO.output(clk_current, GPIO.HIGH)
+#     state_fuc_a(ssd)
+#     GPIO.output(clk_current, GPIO.LOW)
+#     print(f"ssd1 {ssd}")
+#     sleep(0.5)
+# def displaySSD_M(clk_current,clk_prev,ssd):
+#     GPIO.output(clk_prev, GPIO.HIGH)
+#     state_fuc_a(ssd)
+#     GPIO.output(clk_current, GPIO.HIGH)
+#     state_fuc_a(ssd)
+#     GPIO.output(clk_current, GPIO.LOW)
+#     print(f"ssd1 {ssd}")
+#     sleep(0.5)
+# def displaySSD_m(clk_current,clk_prev,ssd):
+#     GPIO.output(clk_prev, GPIO.HIGH)
+#     state_fuc_a(ssd)
+#     GPIO.output(clk_current, GPIO.HIGH)
+#     state_fuc_a(ssd)
+#     GPIO.output(clk_current, GPIO.LOW)
+#     print(f"ssd1 {ssd}")
+#     sleep(0.5)
+    
+    
+def auto(clk_current,clk_prev,ssd):
     GPIO.output(clk_prev, GPIO.HIGH)
     state_fuc_a(ssd)
     GPIO.output(clk_current, GPIO.HIGH)
@@ -676,57 +735,17 @@ def displaySSD_m(clk_current,clk_prev,ssd):
     print(f"ssd1 {ssd}")
     sleep(0.5)
     
-# def displaySSD_h(clk1,clk2,ssd):
-#     
-#     GPIO.output(clk2, GPIO.HIGH)
-#     state_fuc_a(ssd)
-#     print(f"ssd2 {ssd}")
-# 
-# #     GPIO.output(clk, GPIO.LOW)
-#     GPIO.output(clk, GPIO.HIGH)
-#     sleep(0.5)
-# 
-# def displaySSD_M(clk1,clk2,ssd):
-#     toggleClock(clk)
-#     state_fuc_a(ssd)
-# #     GPIO.output(clk, GPIO.HIGH)
-#     print(f"ssd3 {ssd}")
-# #     GPIO.output(clk, GPIO.LOW)
-#     GPIO.output(clk, GPIO.HIGH)
-#     sleep(0.5)
-# 
-# def displaySSD_m(clk1,clk2,ssd):
-#     toggleClock(clk)
-#     state_fuc_a(ssd)
-# #     GPIO.output(clk, GPIO.HIGH)
-#     print(f"ssd4 {ssd}")
-#     GPIO.output(clk, GPIO.HIGH)
-#     sleep(0.5)
-# 
-
-#     GPIO.output(CLK_PINS[2], GPIO.HIGH) #stores the value of the SSD1
-#     toggleClock(CLK_PINS[2])
-#     state3 = ssd_3 
-#     state_fuc_a(state3)
-#     print(f"this is the state_M {state}")
-
-#    
-#     GPIO.output(CLK_PINS[3], GPIO.HIGH) #stores the value of the SSD1
-#     toggleClock(CLK_PINS[3])
-#     state4 = ssd_4 
-#     state_fuc_a(state4)
-#     print(f"this is the state_m {state}")
-
-
-
-print("Press buttons on keypad. Ctrl+C to exit.")
+def A_mode():
+    auto(CLK_PINS[0],CLK_PINS[3], ssd_1)
+    auto(CLK_PINS[1],CLK_PINS[0], ssd_2)
+    auto(CLK_PINS[2],CLK_PINS[1], ssd_3)
+    auto(CLK_PINS[3],CLK_PINS[2], ssd_4)
 
 try:
  
     clkON()
     reset()
-#     datetime_A()
-    print(combined_list)
+    datetime_A()
 #     #start()
 #     #clkReset()
 #     GPIO.output(CLK_PINS[0], GPIO.HIGH)
@@ -739,91 +758,27 @@ try:
 #     ssd_4 = combined_list[3]
     
     while True:
-        while counter_a != 4:
-            if counter_a==0:
-                displaySSD_H(CLK_PINS[0],CLK_PINS[3], ssd_1)
-                print(ssd_1)
-                counter_a+=1
-          
-            elif counter_a==1:
-                print(ssd_2)
-                displaySSD_H(CLK_PINS[1],CLK_PINS[0], ssd_2)
-                counter_a+=1
-              
-            elif counter_a==2:
-                print(ssd_3)
-                displaySSD_H(CLK_PINS[2],CLK_PINS[1], ssd_3)
-                counter_a+=1
-              
-            elif counter_a==3:
-                print(ssd_4)
-                displaySSD_H(CLK_PINS[3],CLK_PINS[2], ssd_4)
-#                 GPIO.output(CLK_PINS[3], GPIO.HIGH)
-                counter_a+=1
-        while counter_a ==4:
-            GPIO.output(CLK_PINS[3], GPIO.HIGH)
-            sleep(.25)
-# # # # #         readKeypad(ROW_PINS[0],['1','4','7','*'])
-# # # # #         readKeypad(ROW_PINS[1],['2','5','8','0'])
-# # # # #         readKeypad(ROW_PINS[2],['3','6','9','#'])
-# # # # #         readKeypad(ROW_PINS[3],['A','B','C','D'])
-# # # # #         
-# # # # #         if state==12: #this means button B was pressed
-# # # # #             B_mode()
-# # # # #             
-# # # # #         if state==11: #this mean button A was pressed
-# # # # #             print("Button A")
-# # # # # #             A_mode()
-#         
-#       if counter_a==0:
-#           
-#           displaySSD_H(CLK_PINS[0],CLK_PINS[3], ssd_1)
-#           print(ssd_1)
-#           counter_a+=1
-#           
-#       elif counter_a==1:
-#           print(ssd_2)
-#           displaySSD_H(CLK_PINS[1],CLK_PINS[0], ssd_2)
-#           counter_a+=1
-#           
-#       elif counter_a==2:
-#           print(ssd_3)
-#           displaySSD_H(CLK_PINS[2],CLK_PINS[1], ssd_3)
-#           counter_a+=1
-#           
-#       elif counter_a==3:
-#           print(ssd_4)   
-#           displaySSD_H(CLK_PINS[3],CLK_PINS[2], 4\)
-#           GPIO.output(CLK_PINS[3], GPIO.HIGH)
-#           counter_a+=1
-# #           
-#       elif counter>3:
-# #           displaySSD_H(CLK_PINS[3],CLK_PINS[3], ssd_1)
-#           counter-=3
-          
         
-    
-    
-#         displaySSD_H(CLK_PINS[1],CLK_PINS[0], ssd_2)
-#         displaySSD_H(CLK_PINS[2],CLK_PINS[1], ssd_3)
-#         displaySSD_H(CLK_PINS[3],CLK_PINS[2], ssd_4)
-#         displaySSD_h(CLK_PINS[1], ssd_2)
-#         displaySSD_M(CLK_PINS[2], ssd_3)
-#         displaySSD_m(CLK_PINS[3], ssd_4)
+        readKeypad(ROW_PINS[0],['1','4','7','*'])
+        readKeypad(ROW_PINS[1],['2','5','8','0'])
+        readKeypad(ROW_PINS[2],['3','6','9','#'])
+        readKeypad(ROW_PINS[3],['A','B','C','D'])
+        
+        if state==12: #this means button B was pressed
+            B_mode()
+            
+        if state==11: #this mean button A was pressed
+            print("Button A")
+            A_mode()
+#             displaySSD_H(CLK_PINS[0],CLK_PINS[3], ssd_1)
+#             displaySSD_H(CLK_PINS[1],CLK_PINS[0], ssd_2)
+#             displaySSD_H(CLK_PINS[2],CLK_PINS[1], ssd_3)
+#             displaySSD_H(CLK_PINS[3],CLK_PINS[2], ssd_4)
 
-#             toggleClock(CLK_PINS[3]) 
-#             readKeypad(ROW_PINS[0],['1','4','7','*'])
-#             readKeypad(ROW_PINS[1],['2','5','8','0'])
-#             readKeypad(ROW_PINS[2],['3','6','9','#'])
-#             readKeypad(ROW_PINS[3],['A','B','C','D'])
-#        
-#         
-#                 if state == 3:
-#                     print("ERROR: can't have 3 as the first HH")
-#                 
 except KeyboardInterrupt:
         print("\nKeypad Application Interrupted") 
         GPIO.cleanup()       
+
 
 
 
