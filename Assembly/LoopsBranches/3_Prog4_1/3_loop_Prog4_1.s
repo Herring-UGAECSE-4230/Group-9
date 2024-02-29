@@ -18,14 +18,14 @@ mydata:	.word	69, 87, 96, 45, 75
 	.text
 	.global _start
 _start:
-	mov	count, #5		@ count = 5
+	movls	count, #5		@ count = 5
 	ldr	pointer, =mydata	@ pointer has the address of first data
         ldr 	max, [pointer]          @ load first value of data
 
 again:
 	ldr	next, [pointer]		@ load contents of pointer location to next
 	cmp	max, next		@ compare max and next		
-	movlo	max, next		@ if max is lower than next then max=next
+	movhs	max, next		@ if max is lower than next then max=next
 	add	pointer, pointer, #4	@ pointer = pointer  +  4 to point to next 
 	subs	count, count, #1	@ decrement counter
 	bne	again			@ branch again if counter is not zero

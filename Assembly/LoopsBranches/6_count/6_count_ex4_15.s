@@ -11,8 +11,12 @@ _start:
 	mov	r1, #0	
 	mov	r2, #32	@ counter
 begin:	movs	r0, r0, rrx	@ rotate right with carry the r0 register
-	addcs	r1, r1, #1	@ if c = 1 then increment r1
+	addeq	r1, r1, #1	@ if c = 1 then increment r1
 	subs	r2, r2, #1	@ decrement counter
 	bne	begin   	@ if counter is not equal to zero branch begin
+
+	@Labeling
+	stop_loop:
+
 	mov 	r7, #1
-	svc 0
+	svc 	0
