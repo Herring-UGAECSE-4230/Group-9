@@ -10,7 +10,7 @@ GPIO.setmode(GPIO.BCM)
 
 #global variables 
 global state, pressed, counter, new, invalid, waiting_for_valid_input, LED #state of each number being pressed; 0-14\
-global eastern, current_time, hour, minute_string, minute_digits_list, yeah, combined_list, hour_digits_list, restart, break_now
+global eastern, current_time, hour, minute_string, minute_digits_list, yeah, combined_list, hour_digits_list, restart, break_now, counter_start, manual_ssd1, manual_ssd2
 global counter_a, ssd_1, ssd_2, ssd_3, ssd_4
 
 #initialized variables
@@ -23,8 +23,8 @@ waiting_for_valid_input = 0
 yeah = 1
 restart= 0
 break_now=0
-
-
+manual_ssd1 = 1
+manual_ssd2 = 0
 
 #initializes var associated with time
 eastern=pytz.timezone("US/Eastern") #sets eastern time zone
@@ -88,162 +88,190 @@ def reset():
 
 #function to interpret which button was pressed
 def readKeypad(rowNum,char):
-    global state, pressed, counter, invalid
+    global state, pressed, counter, invalid, manual_ssd1, manual_ssd2
     
     def hashtag():
+        global onVAR
+        
+        
+        clkReset() # turns clk OFF
+        reset() #setting all pins to low
+        clkON() #turn on all clock
+    
         print("#")
-        # checks if all GPIO segments are OFF
-        while True:
-            if GPIO.output([27,22,13,2,5,6,26,3], GPIO.LOW):
-                print("cattttttttt")
-                if state==0:
-                    zero()
-                if state==1: # if state == (0-14) then it will call each numbers function to turn the GPIO segments ON 
-                    one() 
-                if state==2:
-                    two()
-                if state==3:
-                    three()
-                if state==4:
-                    four()
-                if state==5:
-                    five()
-                if state==6:
-                    six()
-                if state==7:
-                    seven()
-                if state==8:
-                    eight()
-                if state==9:
-                    nine()
-                if state==10:
-                    star()                                                                                                                                                                                                                                                                                                                                  
-            else:
-                reset()
+     
                 
-    def zero():
-        global state, invalid, counter
+    def zero(): #input 0
+        global state, invalid, counter, manual_ssd1
         counter += 1
+        onVAR = 1 
         GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=0
         
-    def one():
-        global state, invalid, counter
+        if counter_track==0:
+            manual_ssd1=state
+        if counter_track==1:
+            manual_ssd2=state
+        
+        
+    def one(): #input 1
+        global state, invalid, counter, manual_ssd1, manual_ssd2
         counter += 1
         GPIO.output([22,13], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=1
 
-    def two():
-        global state, invalid, counter
+        if counter_track==0:
+            manual_ssd1=state
+        if counter_track==1:
+            manual_ssd2=state
+    
+
+    def two(): #input 2
+        global state, invalid, counter, manual_ssd1, manual_ssd2
         counter += 1
         GPIO.output([27,22,3,5,6], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=2
+
+        # manually setting hour SSDs
+        if counter_track==0:
+            manual_ssd1=state
+            print(f"this is manual_ssd1: {manual_ssd1}")
+        if counter_track==1:
+            manual_ssd2=state
+            print(f"this is manual_ssd2: {manual_ssd2}")
     
-    def three():
-        global state, invalid, counter
+    def three(): #input 3
+        global state, invalid, counter, manual_ssd1, manual_ssd2
         GPIO.output([27,22,3,13,6], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=3
         if counter==0: #only allows valid inputs for SSD1
             GPIO.output(4,GPIO.HIGH)
             invalid=1
-            
         else:
+            if counter_track==1:
+                manual_ssd2=state
+                print(f"this is manual_ssd2: {manual_ssd2}")
             counter += 1
     
-    def four():
-        global state, invalid, counter
+    def four():  #input 4
+        global state, invalid, counter, manual_ssd1, manual_ssd2
         GPIO.output([2,3,22,13], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=4
+        
+        # manually setting hour SSDs
         if counter==0:
             GPIO.output(4,GPIO.HIGH)
             invalid=1
         else:
+            if counter_track==1:
+                manual_ssd2=state
+                print(f"this is manual_ssd2: {manual_ssd2}")
             counter += 1
     
-    def five():
-        global state, invalid, counter
+    def five():  #input 5
+        global state, invalid, counter, manual_ssd1, manual_ssd2
         GPIO.output([27,2,3,13,6], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=5
+        # manually setting hour SSDs
         if counter==0:
             GPIO.output(4,GPIO.HIGH)
             invalid=1
         else:
+            if counter_track==1:
+                state= manual_ssd2
+                print(f"this is manual_ssd2: {manual_ssd2}")
             counter += 1
         
-    def six():
-        global state, invalid, counter
+    def six():  #input 6
+        global state, invalid, counter, manual_ssd1, manual_ssd2
         GPIO.output([27,2,5,6,13,3], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=6
+        # manually setting hour SSDs
         if (counter==0 or counter==2): #only allows valid inputs for SSD1 and SSD3
             GPIO.output(4,GPIO.HIGH)
             invalid=1
         else:
+            if counter_track==1:
+                state= manual_ssd2
+                print(f"this is manual_ssd2: {manual_ssd2}")
             counter += 1
         
-    def seven():
-        global state, invalid, counter
+    def seven(): #input 7
+        global state, invalid, counter, manual_ssd1, manual_ssd2
         GPIO.output([27,22,13], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=7
+        # manually setting hour SSDs
         if (counter==0 or counter==2):
             GPIO.output(4,GPIO.HIGH)
             invalid=1
         else:
+            if counter_track==1:
+                state= manual_ssd2
+                print(f"this is manual_ssd2: {manual_ssd2}")
             counter += 1
         
-    def eight():
-        global state, invalid, counter
-        GPIO.output([27,22,13,2], GPIO.HIGH)
+    def eight():  #input 8
+        global state, invalid, counter, manual_ssd1, manual_ssd2
+        GPIO.output([27,22,13,2,5,6,26,3], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=8
+        # manually setting hour SSDs
         if (counter==0 or counter==2):
             GPIO.output(4,GPIO.HIGH)
             invalid=1
         else:
+            if counter_track==1:
+                state= manual_ssd2
+                print(f"this is manual_ssd2: {manual_ssd2}")
             counter += 1
     
-    def nine():
-        global state, invalid, counter
+    def nine():  #input 9
+        global state, invalid, counter, manual_ssd1, manual_ssd2
         GPIO.output([27,2,22,3,13], GPIO.HIGH)
         GPIO.output(4, GPIO.LOW)
         state=9
+        # manually setting hour SSDs
         if (counter==0 or counter==2): 
             GPIO.output(4,GPIO.HIGH)
             invalid=1
         else:
+            if counter_track==1:
+                state= manual_ssd2
+                print(f"this is manual_ssd2: {manual_ssd2}")
             counter += 1
     
-    def star():
+    def star():  #input *
         global state
         GPIO.output(26, GPIO.HIGH)
         state=10
         
-    def a():
+    def a():  #input a for a-mode
         global state, invalid
         GPIO.output(4, GPIO.HIGH)
         state=11
         invalid = 1
     
-    def b():
+    def b(): #input b for b-mode
         global state, invalid
         GPIO.output(4, GPIO.HIGH)
         state=12
         invalid = 1
        
-    def c():
+    def c(): #INVALID input a
         global state, invalid
         GPIO.output(4, GPIO.HIGH)
         state=13
         invalid = 1
       
-    def d():
+    def d(): #INVALID input a
         global state, invalid
         GPIO.output(4, GPIO.HIGH)
         state=14
@@ -257,28 +285,24 @@ def readKeypad(rowNum,char):
         if rowNum==18: 
             print("1")
             pressed = 1
-#             counter += 1
             reset()
             one()
             LED=1
         if rowNum==23:
             print("4")
             pressed = 1
-#             counter += 1
             reset()
             four()
             LED=1
         if rowNum==24:
             print("7")
             pressed = 1
-#             counter += 1
             reset()
             seven()
             LED=1
         if rowNum==25:
             print("*")
             pressed = 1
-#             counter += 1
             reset()
             star()
             
@@ -287,7 +311,6 @@ def readKeypad(rowNum,char):
         if rowNum==18:
             print("2")
             pressed = 1
-#             counter += 1
             reset()
             two()
             LED=1
@@ -295,7 +318,6 @@ def readKeypad(rowNum,char):
         if rowNum==23:
             print("5")
             pressed = 1
-#             counter +=1
             reset()
             five()
             LED=1
@@ -303,7 +325,6 @@ def readKeypad(rowNum,char):
         if rowNum==24:
             print("8")
             pressed = 1
-#             counter +=1
             reset()
             eight()
             LED=1
@@ -311,7 +332,6 @@ def readKeypad(rowNum,char):
         if rowNum==25:
             print("0")
             pressed = 1
-#             counter +=1
             reset()
             zero()
             LED=1
@@ -321,7 +341,6 @@ def readKeypad(rowNum,char):
         if rowNum==18:
             print("3")
             pressed = 1
-#             counter +=1
             reset()
             LED=1
             three()
@@ -331,7 +350,6 @@ def readKeypad(rowNum,char):
         if rowNum==23:
             print("6")
             pressed = 1
-#             counter +=1
             reset()
             six()
             LED=1
@@ -339,13 +357,13 @@ def readKeypad(rowNum,char):
         if rowNum==24:
             print("9")
             pressed = 1
-#             counter +=1
             reset()
             nine()
             LED=1
             
-        if rowNum==25:
+        if rowNum==25: #if hashtag called second time
             print("#")
+            hashtag() 
             while(True):
                 toggleClock(CLK_PINS[0])
                 toggleClock(CLK_PINS[1])
@@ -432,17 +450,15 @@ def readKeypad(rowNum,char):
 def clkReset():
     for clk_pin in CLK_PINS:
         GPIO.output(clk_pin, GPIO.LOW)
-        #print(f"this clock pin is low:{clk_pin}")
 
 #will set all clock pins to high
 def clkON():
     for clk_pin in CLK_PINS:
         GPIO.output(clk_pin, GPIO.HIGH)
-#         print(clk_pin)
 
 #function to display a value on a SSD
 def displaySSD(clk_pin):
-    global pressed, counter, waiting, invalid, waiting_for_valid_input
+    global pressed, counter, waiting, invalid, waiting_for_valid_input, manual_ssd1, manual_ssd2
 
     GPIO.output(clk_pin, GPIO.HIGH)
     if invalid == 0 or waiting_for_valid_input == 1234567: # false
@@ -458,10 +474,11 @@ def displaySSD(clk_pin):
         GPIO.output(4, GPIO.HIGH)
         waiting_for_valid_input = 1234567
         
-
+#setting all segment pins on
 def segON():
     GPIO.output([22,13,2,5,6,26,27,3], GPIO.HIGH)
 
+#blinking an SSD to indicate that clock is waiting for input
 def blink(clk_pin):
     global pressed
     toggleClock(clk_pin)
@@ -479,6 +496,7 @@ def start():
     GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
     state=0
 
+#display dot on
 def dot():
     GPIO.output(CLK_PINS[1], GPIO.LOW)
     GPIO.output(26, GPIO.HIGH)
@@ -486,6 +504,7 @@ def dot():
 #     reset()
     GPIO.output(CLK_PINS[1], GPIO.LOW)
 
+#display dot off
 def noDot():
     GPIO.output(CLK_PINS[1], GPIO.LOW)
     GPIO.output(26, GPIO.LOW)
@@ -493,14 +512,13 @@ def noDot():
 #     reset()
     GPIO.output(CLK_PINS[1], GPIO.LOW)
     
-
+#setting minute SSDs for combined list and onwards
 def minute_fun():
     global eastern, current_time, hour, minute_string, minute_digits_list
     if len(minute_digits_list)==1:
         minute_digits_list.insert(0,0) #add a 0 at index 0 to the list
     else:
         pass
-#     print(f"minute digits: {minute_digits_list}")
 
 #function to get the current hour and minutes and convert them to a list
 def datetime_A():
@@ -550,11 +568,36 @@ def datetime_A():
             minute_fun()
     
     combined_list = hour_digits_list + minute_digits_list
-#     print(f"hour digit list: {hour_digits_list}")
     print(f"list of H,h,M,m: {combined_list}")
     return combined_list
 
+#on states for each input 
+def state_fuc(state):
+    reset()
+    if state==0:
+        GPIO.output([27,22,13,2,5,6,26], GPIO.HIGH)
+    if state==1: # if state == (0-14) then it will call each numbers function to turn the GPIO segments ON 
+        GPIO.output([22,13], GPIO.HIGH)
+    if state==2:
+        GPIO.output([27,22,3,5,6], GPIO.HIGH)
+    if state==3:
+        GPIO.output([27,22,3,13,6], GPIO.HIGH)
+    if state==4:
+        GPIO.output([2,3,22,13], GPIO.HIGH)
+    if state==5:
+        GPIO.output([27,2,3,13,6], GPIO.HIGH)
+    if state==6:
+        GPIO.output([27,2,5,6,13,3], GPIO.HIGH)
+    if state==7:
+        GPIO.output([27,22,13], GPIO.HIGH)
+    if state==8:
+        GPIO.output([27,22,13,2], GPIO.HIGH)
+    if state==9:
+        GPIO.output([27,2,22,3,13], GPIO.HIGH)
+    if state==10:
+        GPIO.output(26, GPIO.HIGH)
 
+#on states for each input 
 def state_fuc_a(state):
     reset()
     if state==0:
@@ -588,9 +631,20 @@ def state_fuc_for_ssd1():
     if state==2:
         GPIO.output([27,22,3,5,6], GPIO.HIGH)
 
-    
+
+def military_2_reg(clk_current,clk_prev,num_func):
+    GPIO.output(clk_prev, GPIO.HIGH)
+    num_func
+    print(f"num_func for ssd1: {num_func}")
+    GPIO.output(clk_current, GPIO.HIGH)
+    num_func
+    GPIO.output(clk_current, GPIO.LOW)
+    print(f"num_func for ssd2: {num_func}")
+    sleep(0.5)
+
+
 def B_mode():
-    global restart
+    global restart, counter_track, manual_ssd1, manual_ssd2
     x=0
     print(x)
     if x==0:
@@ -603,17 +657,168 @@ def B_mode():
         blink(CLK_PINS[counter])
         
         if counter == 0: # when counter = 0 -> corresponds to SSD1
+            counter_track=0
             pressed = -1
             displaySSD(CLK_PINS[0]) #calls displaySSD function to display on SSD
             GPIO.output(CLK_PINS[0], GPIO.LOW) # turns clk1 off 
             sleep(0.15)
             
         if counter == 1:
+            counter_track=1
             pressed = -1
             GPIO.output(CLK_PINS[0], GPIO.HIGH) #stores the value of the SSD1
             displaySSD(CLK_PINS[1])
             GPIO.output(CLK_PINS[1], GPIO.LOW)
             sleep(0.15)
+
+            if manual_ssd1==1:
+                if manual_ssd2==3:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([27,22,3,13,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot()  
+    
+                    print("make display 01")
+                if manual_ssd2==4:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([2,3,22,13], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot()  
+                    dot()
+                    print("make display 02")
+                    
+                if manual_ssd2==5:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([27,2,3,13,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot()  
+                    print("make display 03")
+                    
+                if manual_ssd2==6:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([27,2,5,6,13,3], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot()  
+                    print("make display 04")
+                    
+                if manual_ssd2==7:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([27,22,13], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot()  
+                    print("make display 05")
+                    
+                if manual_ssd2==8:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([27,2,5,6,13,3], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot()  
+                    print("make display 06")
+                    
+                if manual_ssd2==9:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([27,22,13], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot()  
+                    print("make display 07")
+                    
+            if manual_ssd1==2:
+                if manual_ssd2==0:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6,3], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot() 
+                    print("make display 08")
+                    
+                if manual_ssd2==1:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([27,2,22,3,13], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot() 
+                    print("make display 09")
+                  
+                if manual_ssd2==2:
+                    
+                    print("make display 10")
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([22,13], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([27,22,13,2,5,6], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot()                    
+        
+                    sleep(0.5)
+                if manual_ssd2==3:
+                    reset()
+                    GPIO.output(CLK_PINS[0], GPIO.LOW)
+                    GPIO.output([22,13], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[0], GPIO.HIGH)
+                    sleep(.15)
+                    reset()
+                    GPIO.output(CLK_PINS[1], GPIO.LOW)
+                    GPIO.output([22,13], GPIO.HIGH)
+                    GPIO.output(CLK_PINS[1], GPIO.HIGH)
+                    dot() 
+                    print("make display 11")
+                    
             
         if counter == 2:
             pressed = -1
@@ -631,52 +836,28 @@ def B_mode():
             
     while counter == 4:
         GPIO.output(CLK_PINS[3], GPIO.HIGH) #stores the value of the SSD4
-        #counter-= 4
         sleep(0.25)
-#         readKeypad(ROW_PINS[0],['1','4','7','*'])
-#         readKeypad(ROW_PINS[1],['2','5','8','0'])
-#         readKeypad(ROW_PINS[2],['3','6','9','#'])
-#         readKeypad(ROW_PINS[3],['A','B','C','D'])
-#         if break_now==1:
-#             break
-#         if state==13:
-#             readKeypad(ROW_PINS[0],['1','4','7','*'])
-#             readKeypad(ROW_PINS[1],['2','5','8','0'])
-#             readKeypad(ROW_PINS[2],['3','6','9','#'])
-#             readKeypad(ROW_PINS[3],['A','B','C','D'])
-#             sleep(.25)
-#             if break_now==1:
-#                 break
-#             if state==13:
-#                 readKeypad(ROW_PINS[0],['1','4','7','*'])
-#                 readKeypad(ROW_PINS[1],['2','5','8','0'])
-#                 readKeypad(ROW_PINS[2],['3','6','9','#'])
-#                 readKeypad(ROW_PINS[3],['A','B','C','D'])
-#                 if break_now==1:
-#                     break
-#                 sleep(.25)
-#                 if state==13:
-#                     break_now=1
-#                     break
-                    
-                  
-
+                 
+# list that gets hours & minutes, combines them in a list, and then each item in the list is passed to their respective SSDs that are to be displayed
 combined_list = datetime_A()
 ssd_1 = combined_list[0]
 ssd_2 = combined_list[1]
 ssd_3 = combined_list[2]
 ssd_4 = combined_list[3]
 
-    
+# auto function purpose: sets the SSDs to current time based on timezone and displays on SSDs
 def auto(clk_current,clk_prev,ssd):
     GPIO.output(clk_prev, GPIO.HIGH)
     state_fuc_a(ssd)
+    dot()
     GPIO.output(clk_current, GPIO.HIGH)
     state_fuc_a(ssd)
     GPIO.output(clk_current, GPIO.LOW)
     print(f"ssd1 {ssd}")
     sleep(0.5)
-    
+
+
+# a-mode function: keypad returns program back to datetime and setting clock mode
 def A_mode():
     global restart
     auto(CLK_PINS[0],CLK_PINS[3], ssd_1)
@@ -691,11 +872,6 @@ def A_mode():
     if state==12: #this means button B was pressed
         sleep(.5)
         restart=1
-
-#make sure counter is correct for appropriate ssd
-def m_to_s():
-    #dictionary for Hh
-    []
     
 
 try:
@@ -759,8 +935,5 @@ except KeyboardInterrupt:
     pass
 finally:
     GPIO.cleanup
-
-
-
 
 
