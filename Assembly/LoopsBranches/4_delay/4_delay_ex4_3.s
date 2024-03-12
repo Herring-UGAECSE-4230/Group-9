@@ -12,11 +12,18 @@ _start:
 
 	mov	r2, #15		@ load 15 into r2 (outer loop count)
 
-l1:	ldr	r1, =1000000000	@ r1 = 1,000,000,000 (inner loop count) 
-l2:	subs	r1, r1, #1		@ r1 = r1 – 1, decrement r1 (inner loop) 
+l1:	
+	ldr	r1, =1000000000	@ r1 = 1,000,000,000 (inner loop count) 
+
+l2:	
+	subs	r1, r1, #1		@ r1 = r1 – 1, decrement r1 (inner loop) 
 	bne	l2			@ repeat it until r1 = 0 
+
 	subs	r2, r2, #1		@ r2 = r2 – 1, decrement r2 (outer loop) 
 	bne	l1			@ repeat it until r2 = 0 
+
+	@stop label before termination
+	stop_loop:
 
 	@ terminate the program
 	mov   	r7, #1
