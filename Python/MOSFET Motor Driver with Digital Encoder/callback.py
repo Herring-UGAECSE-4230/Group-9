@@ -13,30 +13,27 @@ GPIO.setup(sw, GPIO.IN)
 #initialize the counter and the encoder turn
 counter=0
 lastClkState=GPIO.input(clk)
-
-#debouncing method, without one click would increment counter by 2
-def debounce():
-    time.sleep(.5)
+lastSwState=GPIO.input(sw)
 
 while True:
-    debounce()
 
     #checks states if the pins
     clkState=GPIO.input(clk)
     dtState=GPIO.input(dt)
+    swState=GPIO.input(sw)
+
     #if statement to check for a turn
     if clkState!=lastClkState:
         if dtState!=clkState:
             print("clockwise")
-            counter+=1
-            debounce()
-#             time.sleep(10)
+            counter+=.5
+
         else:
             print("counterclockwise")
+            debounce
             counter-=1
         lastClkState=clkState #update last clk state
         print(counter)
-        debounce()
 
 
 
