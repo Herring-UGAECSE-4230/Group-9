@@ -1,7 +1,8 @@
 import pigpio
-import RPi.GPIO
+import RPi.GPIO as GPIO
 # from xyimport import StepperMotor
 from pigpio_encoder.rotary import Rotary
+import time
 
 last_counter = 0  # Initialize last_counter outside the function
 pi = pigpio.pi()
@@ -10,42 +11,29 @@ pi = pigpio.pi()
 def rotary_callback(counter):
     global last_counter
     print("Counter value:", counter)
+    start = time.time()
     if counter > last_counter:
         last_counter = counter
         print("clockwise + 1")
+        end = time.time()
     elif counter < last_counter:
         last_counter = counter
         print("counterclockwise - 1")
+        end = time.time()
     else:
         print("none")
+    
 
 def sw_short():
-    print("Switch short press")
+    print("press")
 
-def sw_long():
-    print("Switch long press")
-
-clk_gpio=13
-GPIO.setup(clk_gpio,GPIO.IN, pull_up_down = GPIO.PUD_UP) #later on5
-def stateCheck():
-    count = 0
-    lastClkState = GPIO.input(clk_gpio)
-    while True:
-        clkState = GPIO.input(clk_gpio)
-        dtState = GPIO.input(dt_gpio)
-        if clkState != lastClkState:
-            if dtState != clkState:
-                count+=1
-                print("clockwise + 1")
-            else:
-                count+=1
-        lastClkState=clkState
-        print(count)
+#def sw_long():
+#    print("Switch long press")
 
 #sets up the rotary encoder pins
 my_rotary = Rotary(
-    clk_gpio=13,
-    dt_gpio=6,
+    clk_gpio=6,
+    dt_gpio=13,
     sw_gpio=5
 )
 
@@ -55,8 +43,7 @@ my_rotary.setup_rotary(
     max=1100,
     scale=1,
     debounce=200,
-    #rotary_callback=rotary_callback
-    rotary_callback=stateCheck
+    rotary_callback=rotary_callback
 )
 
 #sets up the call backs for if the switch is short pressed and long pressed
@@ -64,10 +51,7 @@ my_rotary.setup_switch(
     debounce=200,
     long_press=True,
     sw_short_callback=sw_short,
-    sw_long_callback=sw_long
+#    sw_long_callback=sw_long
 )
 
 my_rotary.watch()
-
-
-

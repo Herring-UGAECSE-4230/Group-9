@@ -18,6 +18,7 @@ debounce_delay = 5  # Debounce delay in milliseconds
 state = 0  # State variable for debounce state machine
 
 while True:
+    time.sleep(.3)
     # Check states of the pins
     clkState = GPIO.input(clk)
     dtState = GPIO.input(dt)

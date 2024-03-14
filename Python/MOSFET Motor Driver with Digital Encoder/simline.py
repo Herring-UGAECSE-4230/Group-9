@@ -1,56 +1,109 @@
+import pigpio
 import RPi.GPIO as GPIO
+# from xyimport import StepperMotor
+from pigpio_encoder.rotary import Rotary
+import time
 
-# GPIO pin setup
-CLK_PIN = 13
-DT_PIN = 6
-SW_PIN = 5
+last_counter = 0  # Initialize last_counter outside the function
+pi = pigpio.pi()
+last_time = time.time()
+# motor = StepperMotor(pi, 23, 24, delayAfterStep = .001) 
 
-# Initialize GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(CLK_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(DT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(SW_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# SIMLINE'S IDEA: if you have a timer running and there is no rotation with the rotary encoder, then "none" would be printed??
+# Anotha idea: we can also make a function where it counts the number of turns per second based upon the timing function and rotary_callback() as well
 
-# Initialize variables
-last_clk_state = GPIO.input(CLK_PIN)
-last_dt_state = GPIO.input(DT_PIN)
-debounce_counter = 0
-debounce_threshold = 3  # Adjust as needed
+#turns = counter
+#print(f"turns/second: {turns}")
 
-# Define callback functions
-def clockwise_callback():
-    print("Clockwise")
-
-def counterclockwise_callback():
-    print("Counterclockwise")
-
-# Main loop
-try:
-    while True:
-        # Read current state of CLK and DT pins
-        clk_state = GPIO.input(CLK_PIN)
-        dt_state = GPIO.input(DT_PIN)
+#VERSION 1
+# def rotary_callback(counter):
+#     global last_counter
+#     #print("Counter value:", counter)
+#     start = time.time()
+#     if counter > last_counter:
+#         last_counter = counter
+#         print("clockwise + 1")
+#         end = time.time()
+#     elif counter < last_counter:
+#         last_counter = counter
+#         print("counterclockwise - 1")
+#         end = time.time()
+#     else:
+#         print("none")
+#     print("Counter value:", counter)
+#     
+#     #turns/second
+#     timing = end - start
+#     print(timing)
+# #     if (timing % 1 == 1):
+# #        turns_per_second = counter/timing
+# #     print(f"turns/second: {turns_per_second}")
+    
+    
+#VERSION 2
+# including do not turn....
+#what works: getting number of turns per sec
+#need: print cw/ccw and not go into none automatically
+#possible solution: make overall clock to account for "do not turn" or "none" per second while not affecting cw/ccw
+def rotary_callback(counter):
+    global last_counter, last_time
+    curr_time = time.time()
+    elapsed_time = curr_time - last_time
+    
+    if elapsed_time != 0:
+        turns_per_sec = (counter - last_counter) / elapsed_time
+        print("turns/sec:", turns_per_sec)
         
-        # Check for stable state changes
-        if clk_state != last_clk_state or dt_state != last_dt_state:
-            debounce_counter += 1
-        else:
-            debounce_counter = 0
+    last_counter = counter
+    last_time = curr_time
         
-        # If stable state change detected
-        if debounce_counter >= debounce_threshold:
-            # Determine direction of rotation
-            if clk_state != dt_state:
-                clockwise_callback()
-            else:
-                counterclockwise_callback()
-            
-            # Reset debounce counter
-            debounce_counter = 0
-        
-        # Update last states
-        last_clk_state = clk_state
-        last_dt_state = dt_state
+    if counter > last_counter:
+        last_counter = counter
+        print("clockwise + 1")
+    elif counter < last_counter:
+        last_counter = counter
+        print("counterclockwise - 1")
+#     else:
+#         print("none")
+    print("Counter value:", counter)
+    print(" ")
+    
 
-except KeyboardInterrupt:
-    GPIO.cleanup()
+    
+
+def sw_short():
+    print("press")
+
+#def sw_long():
+#    print("Switch long press")
+
+#sets up the rotary encoder pins
+my_rotary = Rotary(
+    clk_gpio=6,
+    dt_gpio=13,
+    sw_gpio=5
+)
+
+#sets up the range for the counter of the rotary encoder, debouces, and establishes the callback used when the encoder is turned
+my_rotary.setup_rotary(
+    min=0,
+    max=1100,
+    scale=1,
+    debounce=200,
+    rotary_callback=rotary_callback
+)
+
+#sets up the call backs for if the switch is short pressed and long pressed
+my_rotary.setup_switch(
+    debounce=200,
+    long_press=True,
+    sw_short_callback=sw_short,
+#    sw_long_callback=sw_long
+)
+
+my_rotary.watch()
+
+# while True:
+#     state = " "
+#     print(state)
+#     print(counter)
