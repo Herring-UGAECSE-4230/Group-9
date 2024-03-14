@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 # from xyimport import StepperMotor
 from pigpio_encoder.rotary import Rotary
 import time
-
+global last_counter,counter
 last_counter = 0  # Initialize last_counter outside the function
 pi = pigpio.pi()
 last_time = time.time()
@@ -49,24 +49,33 @@ def rotary_callback(counter):
     global last_counter, last_time
     curr_time = time.time()
     elapsed_time = curr_time - last_time
-    
-    if elapsed_time != 0:
-        turns_per_sec = (counter - last_counter) / elapsed_time
-        print("turns/sec:", turns_per_sec)
-        
-    last_counter = counter
-    last_time = curr_time
-        
-    if counter > last_counter:
+    #overall_time =
+    while (curr_time % 1000 == 0):
+#         if elapsed_time != 0:
+#             turns_per_sec = abs(counter - last_counter) / elapsed_time
+#             print("turns/sec:", turns_per_sec)
+            
         last_counter = counter
-        print("clockwise + 1")
-    elif counter < last_counter:
-        last_counter = counter
-        print("counterclockwise - 1")
-#     else:
-#         print("none")
-    print("Counter value:", counter)
-    print(" ")
+        last_time = curr_time
+        state=0
+        if counter > last_counter:
+            last_counter = counter
+            print("clockwise + 1")
+            if elapsed_time != 0 and state==0:
+                turns_per_sec = abs(counter - last_counter) / elapsed_time
+                print("turns/sec:", turns_per_sec)
+            state=1
+        elif counter < last_counter:
+            last_counter = counter
+            print("counterclockwise - 1")
+            if elapsed_time != 0 and state==0:
+                turns_per_sec = abs(counter - last_counter) / elapsed_time
+                print("turns/sec:", turns_per_sec)
+            state=1
+    #     else:
+    #         print("none")
+        print("Counter value:", counter)
+        print(" ")
     
 
     
