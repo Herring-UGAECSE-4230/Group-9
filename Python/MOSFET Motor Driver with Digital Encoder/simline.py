@@ -47,35 +47,38 @@ last_time = time.time()
 #possible solution: make overall clock to account for "do not turn" or "none" per second while not affecting cw/ccw
 def rotary_callback(counter):
     global last_counter, last_time
+    
     curr_time = time.time()
-    elapsed_time = curr_time - last_time
+    elapsed_time = abs(curr_time - last_time)
+    print(elapsed_time)
     #overall_time =
-    while (curr_time % 1000 == 0):
+    #
 #         if elapsed_time != 0:
 #             turns_per_sec = abs(counter - last_counter) / elapsed_time
 #             print("turns/sec:", turns_per_sec)
-            
+    if elapsed_time <= 1:
+        
         last_counter = counter
         last_time = curr_time
-        state=0
+        print('hey')
         if counter > last_counter:
             last_counter = counter
             print("clockwise + 1")
-            if elapsed_time != 0 and state==0:
-                turns_per_sec = abs(counter - last_counter) / elapsed_time
-                print("turns/sec:", turns_per_sec)
-            state=1
         elif counter < last_counter:
             last_counter = counter
             print("counterclockwise - 1")
-            if elapsed_time != 0 and state==0:
-                turns_per_sec = abs(counter - last_counter) / elapsed_time
-                print("turns/sec:", turns_per_sec)
-            state=1
-    #     else:
-    #         print("none")
-        print("Counter value:", counter)
-        print(" ")
+        
+        
+    turns_per_sec = abs(counter - last_counter) / elapsed_time
+    print(f"turns/sec: {turns_per_sec:.2f}")
+        
+
+    print("Counter value:", counter)
+    print(" ")
+ 
+counter = 0
+while True:
+    rotary_callback(counter)
     
 
     
