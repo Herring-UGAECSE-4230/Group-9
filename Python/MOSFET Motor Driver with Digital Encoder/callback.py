@@ -1,12 +1,9 @@
 import pigpio
-from xyimport import StepperMotor
 from pigpio_encoder.rotary import Rotary
 
 
 pi = pigpio.pi()
-motor_x = StepperMotor(pi, 24, 23, delayAfterStep = .001) 
-motor_y = StepperMotor(pi, 25, 12, delayAfterStep = .001) 
-motor_z = StepperMotor(pi, 16, 26, delayAfterStep = .0019) 
+
 
 last_counter = 0  # Initialize last_counter outside the function
 
@@ -60,17 +57,6 @@ def sw_short_y():
     else:
         pen_up(200)
         state=1
-    
-def pen_down(x):
-    for _ in range(x):
-        motor_z.doCounterclockwiseStep()
-        # time.sleep(.0025)
-
-def pen_up(x):
-    for _ in range(x):
-        motor_z.doClockwiseStep()
-        # time.sleep(.0025)
-
 
 
 def up_callback_x(x):
@@ -87,25 +73,6 @@ def down_callback_y(x):
     for _ in range(x):
         motor_y.doCounterclockwiseStep()
 
-my_rotary_y = Rotary(
-    clk_gpio=13,
-    dt_gpio=6,
-    sw_gpio=5
-)
-my_rotary_y.setup_rotary(
-    min=0,
-    max=10000000,
-    scale=1,
-    debounce=200,
-    rotary_callback=rotary_callback_y
-)
-# my_rotary_y.setup_switch(
-#     debounce=200,
-#     long_press=True,
-#     sw_short_callback=sw_short,
-# )
-
-#my_rotary_y.watch()
 
 my_rotary_x = Rotary(
     clk_gpio=22,
@@ -119,27 +86,14 @@ my_rotary_x.setup_rotary(
     debounce=200,
     rotary_callback=rotary_callback_x
 )
-# my_rotary_x.setup_switch(
-#     debounce=200,
-#     long_press=True,
-#     sw_short_callback=sw_short
-# )
-
-# my_rotary_x.watch()
-
-
-my_rotary_z= Rotary(
-    clk_gpio=13,
-    dt_gpio=6,
-    sw_gpio=5
-)
-
-my_rotary_z.setup_switch(
+my_rotary_x.setup_switch(
     debounce=200,
     long_press=True,
-    sw_short_callback=sw_short_y
+    sw_short_callback=sw_short
 )
 
-my_rotary_z.watch()
+my_rotary_x.watch()
+
+
 
 
