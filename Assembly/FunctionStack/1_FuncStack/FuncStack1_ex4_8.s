@@ -7,13 +7,17 @@
 	.text
 	.global _start	
 _start:
-
+	mov r4, #5  @looping counter
 again:	mov	r2, #0x55	@ r2 = 0x55
 	bl	delay  	@ call delay (r14 = pc of next instruction)
 	mov	r2, #0xaa	@ r2 = 0xaa
 	bl	delay  	@ call delay 
-	b	again   	@ keep doing it
 
+	subs r4, r4, #1 @decrementing looping counter
+	cmp r4, #0      @comparing looping counter
+	bne again       @if counter != 0, branching back to 'again' again
+
+	@termination
 	mov r7, #1
 	svc	0
 
