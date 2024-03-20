@@ -1,5 +1,5 @@
 #Points to the file to be compiles
-FILE = FuncStack2_Prog4_3.s
+FILE = FuncStack2_Prog4_3
 
 #This OBJS is just a variable that we can define as the file we would like to create
 OBJS = $(FILE).o
