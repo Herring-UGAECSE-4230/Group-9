@@ -1,14 +1,3 @@
-- . - . - | attention
--   . . . .   . .   . . . | this
-       ..   … | is
-       . - | a
-  .   …   - | test
-- . - | over
--   . . . .   . .   . . . | this
-       ..   … | is
-       - . - .   - - -   - .   . . .   . .   - . .   .   . - .   . - . . | considered
-       . - | a
-       . . .   .    - . - .   - - -   - .   - . . | second
-       - -   .   . . .   . . .   . -   - - .   . | message
-- . - | over
-. - . - . | out
+sos
+today is 10 19
+quick lazy fox

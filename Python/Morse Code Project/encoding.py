@@ -7,7 +7,6 @@ import numpy as np
 GPIO.setmode(GPIO.BCM)
 LED_PIN = 16
 SPEAKER_PIN = 27
-#unit_length = float(input('Enter the desired unit length in seconds: '))
 GPIO.setup([LED_PIN, SPEAKER_PIN], GPIO.OUT)
 
 # Morse code translations
@@ -83,5 +82,6 @@ try:
         file_name = input('Enter a file to decode: ')
         write_morse_code('message.txt', file_name)
         output_morse_code('message.txt')
+        unit_length = float(input('Enter the desired unit length in seconds: '))
 except KeyboardInterrupt:
     GPIO.cleanup()
