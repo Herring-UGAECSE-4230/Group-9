@@ -1,3 +1,4 @@
+#THIS IS THE ACTUAL FINAL ENCODER!!!!
 import RPi.GPIO as GPIO
 import pigpio
 from time import sleep
