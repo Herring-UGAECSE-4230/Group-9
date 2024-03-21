@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import pigpio
 from time import sleep
 import simpleaudio as sa
 import numpy as np
@@ -22,27 +23,36 @@ morse_code_dict = {'a': '.- ', 'b': '-... ', 'c': '-.-. ', 'd': '-.. ', 'e': '. 
 def write_morse_code(char, morse_code_dict, output_file):
     with open(output_file, 'a') as file:
         if char.lower() in morse_code_dict:
-            var= file.write(morse_code_dict[char.lower()])
-            print(morse_code_dict.values(char.lower()))
+            file.write(morse_code_dict[char.lower()])
+            var= morse_code_dict[char.lower()]
+            for dot_dash in var:
+                LED_flash(dot_dash)
         else:
             file.write('\n' + char)
 
 def LED_flash(char):
     if char == "-":
-        print("flash LED -")
-        GPIO.output(16, HIGH)
-        time.sleep(1)
-        GPIO.output(16, LOW)
+        print("-")
+        GPIO.output(16, GPIO.HIGH)
+        GPIO.output(27, GPIO.HIGH)
+        sleep(1)
+        GPIO.output(16, GPIO.LOW)
+        GPIO.output(27, GPIO.LOW)
+
+        
     if char == ".":
-        print("flash LED .")
-        GPIO.output(16, HIGH)
-        time.sleep(.5)
-        GPIO.output(16, LOW)
+        print(".")
+        GPIO.output(16, GPIO.HIGH)
+        GPIO.output(27, GPIO.HIGH)
+        sleep(.15)
+        GPIO.output(16, GPIO.LOW)
+        GPIO.output(27, GPIO.LOW)
+        print()
+        
     else:
-        print("flash LED space")
-        GPIO.output(16, HIGH)
-        time.sleep(.5)
-        GPIO.output(16, LOW)
+        sleep(.5)
+        print("Space")
+        GPIO.output(16, GPIO.LOW)
 
 def encode_to_morse(input_file, output_file):
     global counter
