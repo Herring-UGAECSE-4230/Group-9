@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-# MC Encoder - Group 9 
-import RPi.GPIO
-from time import sleep
-import simpleaudio
-import numpy
 
-=======
+# MC Encoder - Group 9 
 import RPi.GPIO as GPIO
 from time import sleep
 import simpleaudio as sa
@@ -90,4 +84,4 @@ if __name__ == "__main__":
         main()
     finally:
         GPIO.cleanup()  # Clean up GPIO pins on exit
->>>>>>> 85126b96ff93ac0f1979fbe10f3c9cd9f9f9bdff
+
