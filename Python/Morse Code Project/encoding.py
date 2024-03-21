@@ -1,30 +1,73 @@
-
-# MC Encoder - Group 9 
-import RPi.GPIO as GPIO
 from time import sleep
+import RPi.GPIO as GPIO
 import simpleaudio as sa
 import numpy as np
 
-# Initialize GPIO pins
-led_pin = 16  # Assuming the LED is connected to GPIO pin 18
-speaker_pin = 27  # Assuming the speaker is connected to GPIO pin 23
+# Setup GPIO
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(led_pin, GPIO.OUT)
-GPIO.setup(speaker_pin, GPIO.OUT)
+LED_PIN = 16
+SPEAKER_PIN = 27
+#unit_length = float(input('Enter the desired unit length in seconds: '))
+GPIO.setup([LED_PIN, SPEAKER_PIN], GPIO.OUT)
 
-# Define Morse code dictionary
-morse_code_dict = {
-    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
-    'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
-    'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
-    'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
-    '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
-    ' ': ' ',  # space character
-    'OVER': ' - - -   .   - . - .   - - - ',  # Separator for "over"
-    'OUT': '. - . - .   | '  # Separator for "out"
-}
+# Morse code translations
+morse_code_dict = {'a': '.- ', 'b': '-... ', 'c': '-.-. ', 'd': '-.. ', 'e': '. ',
+                   'f': '..-. ', 'g': '--. ', 'h': '.... ', 'i': '.. ', 'j': '.--- ',
+                   'k': '-.- ', 'l': '.-.. ', 'm': '-- ', 'n': '-. ', 'o': '--- ',
+                   'p': '.--. ', 'q': '--.- ', 'r': '.-. ', 's': '... ', 't': '- ',
+                   'u': '..- ', 'v': '...- ', 'w': '.-- ', 'x': '-..- ', 'y': '-.-- ',
+                   'z': '--.. ', '0': '----- ', '1': '.---- ', '2': '..--- ', '3': '...-- ',
+                   '4': '....- ', '5': '..... ', '6': '-.... ', '7': '--... ', '8': '---.. ',
+                   '9': '----. '}
 
-# Function to play audio at a specific frequency
+# Translate character to Morse code
+def translate(char):
+    return morse_code_dict.get(char.lower(), ' ')
+
+# Translate word to Morse code
+def word_to_morse(word):
+    if word.lower() == 'attention':
+        return '-.-.-'
+    if word.lower() == 'over':
+        return '-.-'
+    if word.lower() == 'out':
+        return '.-.-.'
+    return ''.join(translate(i) for i in word)
+
+# Write Morse code output to file
+def write_morse_code(filename, input_file):
+    with open(input_file) as file:
+        lines = [line.rstrip() for line in file.readlines()]
+    with open(filename, 'w') as f:
+        f.write(word_to_morse('attention') + '| ' + 'attention' + '\n') 
+        for line in lines:
+            line = line.split(' ')
+            for i, word in enumerate(line):
+                f.write(('       ' if i > 0 else '') + word_to_morse(word) + '| ' + word + '\n')
+            f.write(word_to_morse('over') + '| ' + 'over' + '\n')
+        f.write(word_to_morse('out') + '| ' + 'out' + '\n')
+
+# Output Morse code to LED and speaker
+def output_morse_code(filename):
+    with open(filename) as file:
+        lines = [line.rstrip().split('|')[0].strip() for line in file.readlines()]
+    for line in lines:
+        for ch in line:
+            if ch == '-':
+                beep(0.5 * unit_length)
+            elif ch == '.':
+                beep(0.25 * unit_length)
+            else:
+                sleep(0.25 * unit_length)
+
+# Beep function for audio and LED
+def beep(duration):
+    GPIO.output([LED_PIN, SPEAKER_PIN], 1)
+    play_audio(500, duration)
+    GPIO.output([LED_PIN, SPEAKER_PIN], 0)
+    sleep(0.5 * unit_length)
+
+# Play audio at a specific frequency
 def play_audio(frequency, duration):
     Fs = 44100  # Sampling frequency
     t = np.linspace(0, duration, int(duration * Fs), False)  # Generate time array
@@ -34,54 +77,11 @@ def play_audio(frequency, duration):
     play_obj = sa.play_buffer(audio, 1, 2, Fs)  # Play audio
     play_obj.wait_done()  # Wait for audio to finish playing
 
-# Function to encode text into Morse code
-def encode_to_morse(text):
-    morse_code = ""
-    for char in text.upper():
-        if char in morse_code_dict:
-            morse_code += morse_code_dict[char] + " "
-        else:
-            morse_code += "/ "  # Placeholder for unknown characters
-    return morse_code
-
-# Function to display Morse code using LED and speaker
-def display_morse_code(morse_code, unit_length):
-    for symbol in morse_code.split():
-        if symbol == '.':
-            GPIO.output(led_pin, GPIO.HIGH)
-            play_audio(500, unit_length)
-            GPIO.output(led_pin, GPIO.LOW)
-            sleep(unit_length)
-        elif symbol == '-':
-            GPIO.output(led_pin, GPIO.HIGH)
-            play_audio(500, 3 * unit_length)
-            GPIO.output(led_pin, GPIO.LOW)
-            sleep(unit_length)
-        elif symbol == '|':
-            sleep(2 * unit_length)  # Pause for separators
-        elif symbol == '/':
-            sleep(4 * unit_length)  # Pause for unknown characters
-
-# Main function
-def main():
-    messages = [
-        "ATTENTION", "THIS", "IS", "A", "TEST",
-        "CONSIDERED", "SECOND", "MESSAGE"
-    ]
-    unit_length = float(input("Enter the unit length (in seconds): "))
-
-    # Encode each message to Morse code and display using LED and speaker
-    for message in messages:
-        morse_code = encode_to_morse(message)
-        display_morse_code(morse_code, unit_length)
-        print("over")  # Indicate end of message
-
-    # End transmission
-    print("out")
-
-if __name__ == "__main__":
-    try:
-        main()
-    finally:
-        GPIO.cleanup()  # Clean up GPIO pins on exit
-
+# Main loop
+try:
+    while True:
+        file_name = input('Enter a file to decode: ')
+        write_morse_code('message.txt', file_name)
+        output_morse_code('message.txt')
+except KeyboardInterrupt:
+    GPIO.cleanup()
