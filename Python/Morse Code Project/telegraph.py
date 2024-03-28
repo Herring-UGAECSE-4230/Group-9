@@ -76,9 +76,9 @@ def convertTimeToSymbol():
         morseSymbols.append(translateToSymbol(times))
     keypressTimes.clear()
 
-# function that changes morse code to letter and store this in word list
+# function that changes morse code to letter and store this in decodedCharacters list
 def convertSymbolsToLetter():
-    global morseSymbols, word
+    global morseSymbols, decodedCharacters
     letter = ''
     if not morseSymbols:
         return
@@ -89,7 +89,7 @@ def convertSymbolsToLetter():
     else:
         letter = '?'
     print(letter)
-    word.append(letter)
+    decodedCharacters.append(letter)
     morseSymbols.clear()
 
 #This function is for rising edge - starts timer immediately, turns on led, once falling edge is triggered, global time variable 
@@ -132,7 +132,7 @@ while True:
         avgDotDuration = (keypressTimes[1] + keypressTimes[3]) / 2
         cutoffLength = avgDotDuration * 2
         keypressTimes.clear()
-        word.clear()
+        decodedCharacters.clear()
         print('\n*')
         break
 
@@ -150,10 +150,10 @@ with open(fileName, 'w') as file:
             if keypressTimes:
                 convertTimeToSymbol()
                 convertSymbolsToLetter()
-            if not file.closed and word:
-                if word[0] != '!':
-                    file.write(word[0])
+            if not file.closed and decodedCharacters:
+                if decodedCharacters[0] != '!':
+                    file.write(decodedCharacters[0])
                 else:
                     file.write('!')
                     file.close()
-                word.clear() 
+                decodedCharacters.clear() 
