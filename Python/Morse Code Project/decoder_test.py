@@ -29,3 +29,28 @@ m_to_l = {'.-': 'a', '-...': 'b', '-.-.': 'c', '-..': 'd', '.': 'e',
           '--..': 'z', '-----': '0', '.----': '1', '..---': '2', '...--': '3',
           '....-': '4', '.....': '5', '-....': '6', '--...': '7', '---..': '8',
           '----.': '9'}
+
+#GPIO Setup
+GPIO.setmode(GPIO.BCM)
+key_pin = 12 #pin to telegraph
+GPIO.setup(key_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+while True:
+    GPIO.input(key_pin, key_pin)
+    start_time = time()
+    GPIO.edge_wait(key_pin, GPIO.RISING)
+    end_time = time()
+    duration = end_time - start_time
+
+    if duration < 0.3:
+        morse += '.'
+    elif:
+        morse += '-'
+    else:
+        morse += ' '
+
+try:
+    morse_detect()
+except KeyboardInterrupt:
+    GPIO.cleanup()
+
