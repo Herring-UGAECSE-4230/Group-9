@@ -9,7 +9,7 @@ GPIO.setup(12, GPIO.OUT)
 pwm = GPIO.PWM(12, 50)
 
 #Changing PWM Frequency by Hertz
-pwm.ChangeFrequency(100000)
+pwm.ChangeFrequency(1000)
 
 #Starting the PWM Output - Duty Cycle of 50%
 pwm.start(50)
