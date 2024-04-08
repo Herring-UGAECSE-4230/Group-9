@@ -4,13 +4,13 @@ import time
 
 
 # setting gpio pins to telegraph, led, speaker 
-KEY_PIN = 21
+TELEGRAPH_PIN = 21
 LED_PIN = 16
 SPEAKER_PIN = 27
 
 # gpio setups 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(KEY_PIN, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+GPIO.setup(TELEGRAPH_PIN, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 GPIO.setup(LED_PIN, GPIO.OUT, initial = GPIO.LOW)
 GPIO.setup(SPEAKER_PIN,GPIO.OUT)
 speaker = GPIO.PWM(SPEAKER_PIN,50) # (pin, 50% Duty Cycle)
@@ -100,22 +100,22 @@ def risingEdge(channel):
     keypressComplete = 0
     temp = time.time()
     #debounce case
-    if (temp - lastFallingEdgeTime) < 0.01:
+    if (temp - lastFallingEdgeTime) < 0.1:
         keypressComplete = 1
         return
-    GPIO.output(LED_PIN, GPIO.HIGH)
+    GPIO.output(LED_PIN, GPIO.LOW)
     #Turn tone on here:
-    speaker.start(50)
+    speaker.stop()
     #Morse Letter case
     if (time.time() - lastFallingEdgeTime) >= spaceLength and not start:
         convertTimeToSymbol()
         convertSymbolsToLetter()
-    while GPIO.input(KEY_PIN):
+    while GPIO.input(TELEGRAPH_PIN):
         i = 0
     lastFallingEdgeTime = time.time()
-    GPIO.output(LED_PIN, GPIO.LOW)
+    GPIO.output(LED_PIN, GPIO.HIGH)
     #Turn tone off here:
-    speaker.stop()
+    speaker.start(50)
     #Case for glitch press occurs on device
     if (lastFallingEdgeTime - temp) < 0.01:
         keypressComplete = 1
@@ -123,7 +123,7 @@ def risingEdge(channel):
     keypressTimes.append(lastFallingEdgeTime - temp)
     keypressComplete = 1
 
-GPIO.add_event_detect(KEY_PIN, GPIO.RISING, callback=risingEdge, bouncetime=100)
+GPIO.add_event_detect(TELEGRAPH_PIN, GPIO.RISING, callback=risingEdge, bouncetime=100)
 
 #This loop is the starting calibration loop that determines the time variables
 print('Enter Attention')
@@ -139,14 +139,16 @@ while True:
 print('cutoffLength: ', cutoffLength, '  s')
 
 fileName = str(time.strftime('%H:%M:%S')) + ' Test'
-while GPIO.input(KEY_PIN):
+while GPIO.input(TELEGRAPH_PIN):
     i = 0
 start = 0
 #This is main loop that calls the different methods to convert times to letters and also writes to the file
-with open(fileName, 'w') as file:
+with open(fileName, 'a') as file:
     file.write('*')
+    print("Hereeeeeeeeeeeeeee")
     while True:
         if (time.time() - lastFallingEdgeTime) > spaceLength and keypressComplete:
+            print("hmmmmmmmmmmmmmmmm")
             if keypressTimes:
                 convertTimeToSymbol()
                 convertSymbolsToLetter()
@@ -157,3 +159,4 @@ with open(fileName, 'w') as file:
                     file.write('!')
                     file.close()
                 decodedCharacters.clear() 
+
