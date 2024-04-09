@@ -4,7 +4,7 @@ import time
 
 
 # setting gpio pins to telegraph, led, speaker 
-TELEGRAPH_PIN = 21
+KEY_PIN = 21
 LED_PIN = 16
 SPEAKER_PIN = 27
 
