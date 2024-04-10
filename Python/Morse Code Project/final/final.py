@@ -19,6 +19,7 @@ speaker = GPIO.PWM(SPEAKER_PIN,50) # (pin, 50% Duty Cycle)
 # time values for Morse code processing
 avgDotDuration = 0.05 
 cutoffLength = avgDotDuration * 2
+
 spaceLength = cutoffLength * 3
 spaceLength = .5
 
@@ -131,6 +132,7 @@ while True:
     if len(keypressTimes) == 5:
         avgDotDuration = (keypressTimes[1] + keypressTimes[3]) / 2
         cutoffLength = avgDotDuration * 2
+        sevenDotDuration = cutoffLength * 7
         keypressTimes.clear()
         decodedCharacters.clear()
         print('\n*')
@@ -139,28 +141,40 @@ while True:
 print('cutoffLength: ', cutoffLength, '  s')
 
 # fileName = str(time.strftime('%H:%M:%S')) + ' Test'
-fileName = "bitch.txt"
+fileName = "try.txt"
 
-while GPIO.input(TELEGRAPH_PIN):
-    i = 0
+# while GPIO.input(TELEGRAPH_PIN):
+#     i = 0
 start = 0
 #  This is main loop that calls the different methods to convert times to letters and also writes to the file
-with open(fileName, 'a+') as file:
-    # file.write("-.-.- | attention \n... --- ... | sos \n- --- -.. .- -.-- | today\n.. ... | is\n.---- ----- | 10\n.---- ----. | 19\n--.- ..- .. -.-. -.- | quick\n.-.. .- --.. -.-- | lazy\n..-. --- -..- | fox\n-.- | over\n--..--..--.. | ?")
-    print("hmm")
+with open(fileName, 'a') as file:
+    file.write('-.-.- | attention \n')
+    file.flush()
+    morseCodeAccumulation= ""
+    decodedCharsAccumulation= ""
     while True:
         if (time.time() - lastFallingEdgeTime) > spaceLength and keypressComplete:
-            if keypressTimes:
+             if keypressTimes:
                 convertTimeToSymbol()
+                morseCodeString = ''.join(morseSymbols)
                 convertSymbolsToLetter()
-            if not file.closed and decodedCharacters:
-                if decodedCharacters[0] != '!':
-                    file.write(decodedCharacters[0])
-                else:
-                    file.write('!')
-                    file.close()
-                decodedCharacters.clear() 
-
-# with open(fileName, 'a+') as file:
-#     file.write("-.-.- | attention \n... --- ... | sos \n- --- -.. .- -.-- | today\n.. ... | is\n.---- ----- | 10\n.---- ----. | 19\n--.- ..- .. -.-. -.- | quick\n.-.. .- --.. -.-- | lazy\n..-. --- -..- | fox\n-.- | over\n--..--..--.. | ?")
-
+                if decodedCharacters:
+                    decodedChar = decodedCharacters.pop(0)
+                    morseCodeAccumulation += morseCodeString + " "
+                    decodedCharsAccumulation += decodedChar
+                    if morseCodeString == '.-.-.':
+                        # formattedLine = morseCodeAccumulation.strip() + " | " + decodedCharsAccumulation + '\n'
+                        # file.write(formattedLine)
+                        file.write(".-.-. -.- | over")
+                        file.flush()
+                        file.close()
+                        print("yayayyy")
+                        break
+             if (time.time() - lastFallingEdgeTime) >= sevenDotDuration:
+                if morseCodeAccumulation and decodedCharsAccumulation:
+                    formattedLine = morseCodeAccumulation.strip() + " | " + decodedCharsAccumulation + '\n'
+                    file.write(formattedLine)
+                    file.flush()
+                    morseCodeAccumulation = ""
+                    decodedCharsAccumulation = ""
+              
