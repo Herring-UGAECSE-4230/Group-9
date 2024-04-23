@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
 import time
-from pigpio_encoder.rotary import Rotary
 
 #GPIO pin set up
 clk=13
@@ -30,14 +29,14 @@ while True:
     #check if button is pressed
     if swState!=lastSwState:
         print("button pressed")
-        lastSwState=swState
-#         debounce()
+        debounce()
     
     #if statement to check for a turn
     if clkState!=lastClkState:
         if dtState!=clkState and state==1:
             print("clockwise")
             counter+=1
+
         else:
             print("counterclockwise")
             counter-=1
@@ -46,6 +45,9 @@ while True:
 #         debounce()
     else:
         pass
+#         print("none")
+#         time.sleep(.5)
+
 
 
 

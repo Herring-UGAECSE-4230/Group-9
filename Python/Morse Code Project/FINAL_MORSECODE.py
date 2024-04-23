@@ -167,7 +167,7 @@ with open(fileName, 'a') as file: # opens the file and appends to it
                     morseCodeWords += morseCodeString + " "
                     decodedCharsWords += decodedChar
                     # special case: if the user sends the "out" symbol, we close the file and exit
-                    if morseCodeString == '.-.-.': 
+                    if morseCodeString == '.-.-. -.-': 
                         file.write(".-.-. -.- | over")
                         file.flush()
                         file.close()
@@ -183,3 +183,4 @@ with open(fileName, 'a') as file: # opens the file and appends to it
                     # resets words to decode the next word
                     morseCodeWords = ""
                     decodedCharsWords = ""  
+                    print("space")

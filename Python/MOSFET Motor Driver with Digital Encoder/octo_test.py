@@ -3,10 +3,10 @@ import time
 
 #GPIO Pin Setup for PWM
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(12, GPIO.OUT)
+GPIO.setup(26, GPIO.OUT)
 
 #Setting Up GPIO pin for PWM Output
-pwm = GPIO.PWM(12, 50)
+pwm = GPIO.PWM(26, 50)
 
 #Changing PWM Frequency by Hertz
 pwm.ChangeFrequency(1000)

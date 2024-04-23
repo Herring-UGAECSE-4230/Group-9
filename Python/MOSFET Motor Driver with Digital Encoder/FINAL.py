@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import pigpio
 import time
 from pigpio_encoder.rotary import Rotary
+import math
 from math import e
 
 #GPIO Pin Setup for PWM
@@ -29,6 +30,9 @@ DC = 20
 desired_RPM = 0
 sofia = 0
 
+#IR sensor initialization
+IR_pin = 21
+
 #function called when rotary encoder is turned
 def rotary_callback(counter):
     global last_counter, desired_RPM, DC, counter_RPM, RPM_value, end_time
@@ -36,7 +40,7 @@ def rotary_callback(counter):
         last_counter = counter #resets last_counter to be the current counter value
         if pi.read(13)==1: #if pin 13 of the pi is high, aka the clk pin
 #             RPM = -789.552 + 884.9955*ln(DC) #equation created from the log regression of some experimental data
-            desired_RPM += 25 #increment the desired RPMs by 25 with each encoder spin
+            desired_RPM += 50 #increment the desired RPMs by 25 with each encoder spin
             DC = e**((desired_RPM+789.552)/884.9955) #sets the duty cycle to be the necessary value in order to ensure the desired RPMs are met. This is a rearrangement of the RPM equation solved for duty cycle.
             pwm.start(DC) #makes the motor spin at the duty cycle set directly above
             counter = 0 #ya know I don't actually think this does anything, but Im commenting the code rn so I dont want to remove something that might be crucial, TLDR; probs can be removed
@@ -117,7 +121,7 @@ try:
     while True:
         print(f"Actual RPM: {RPM_value/2}")
         time.sleep(.3)
-        print(f"Expected RPM: {desired_RPM/2}")
+        print(f"Expected RPM: {desired_RPM/2}\n")
         time.sleep(.3)
        
 except:
