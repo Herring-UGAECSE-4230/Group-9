@@ -1,4 +1,4 @@
-OBJS = linux.o
+OBJS = Linux_asm_squarewave.o
 ifdef DEBUG
 DEBUGFLGS = -g
 else
@@ -7,8 +7,8 @@ endif
 
 %.o : %.s
 	as $(DEBUGFLGS) $< -o $@
-GPIO_ON_OFF: $(OBJS)
-	gcc -o GPIO_ON_OFF $(OBJS)
+GPIO: $(OBJS)
+	gcc -o GPIO $(OBJS)
 
 clean:
-	rm *.o GPIO_ON_OFF
+	rm *.o GPIO
