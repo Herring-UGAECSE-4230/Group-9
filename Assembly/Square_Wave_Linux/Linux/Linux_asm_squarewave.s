@@ -62,37 +62,32 @@ main:
 
 
 @ Give meaningful names to our two variables
-@ for 1Hz 50/50
-@ .equ On_time , 374000000
-@ .equ Off_time, 374000000
-
-@ Give meaningful names to our two variables
 @ for 100Hz 50/50
 @.equ On_time , 3740000
 @.equ Off_time, 3740000
 
-@ for 1kHz 50/50
-@.equ On_time , 374000
-@.equ Off_time, 374000
-
-@ for 1kHz 75/25
-.equ On_time , 561000
-.equ Off_time, 187000
+@ Give meaningful names to our two variables
+@ for 1Hz 50/50
+@ .equ On_time , 430000000
+@ .equ Off_time, 430000000
 
 @ for 1Hz 25/75
-@ .equ On_time , 187000000
-@ .equ Off_time, 561000000
+@ .equ On_time , 215000000
+@ .equ Off_time, 645000000
 
-@ for fastest frequency = 100k Hz at 50.4/49.6 % Duty Cycle
-@.equ On_time , 3740
-@.equ Off_time, 3740
+@ for 1kHz 50/50
+@.equ On_time , 430000
+@.equ Off_time, 430000
 
-@ for data collection
-@ .equ On_time, 124
-@ .equ Off_time, 124
+@ for fastest frequency (886k Hz at 52.93% Duty Cycle)
+@.equ On_time , 500
+@.equ Off_time, 500
+
+@ for data
+ .equ On_time, 215000   
+ .equ Off_time, 215000    
 
 loop:
-
 @ Turn on
    
     @ turn on cdode
@@ -126,9 +121,7 @@ loop:
         subs r8, r8, #1 @ decrement the counter
 
         bne delay2
-
     b loop
-
 
 GPIO_BASE:
     .word   0xfe200000  @GPIO Base address Raspberry pi 4
