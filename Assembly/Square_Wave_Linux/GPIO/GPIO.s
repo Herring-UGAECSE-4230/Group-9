@@ -1,9 +1,9 @@
 @ Constants for blink at GPIO21
-@ GPFSEL2 [Offset: 0x08] for GPIO Pins 20 to 29
-@ GPCLR0 [Offset: 0x28] for GPIO Pins 0 to 31
-@ GPSET0 [Offest: 0x1C] for GPIO Pins 0 to 31
+@ GPFSEL2 [Offset: 0x08] responsible for GPIO Pins 20 to 29
+@ GPCLR0 [Offset: 0x28] responsible for GPIO Pins 0 to 31
+@ GPSET0 [Offest: 0x1C] responsible for GPIO Pins 0 to 31
 
-@GPOI21
+@ GPOI21 Related
 .equ    GPFSEL2, 0x08   @ function register offset
 .equ    GPCLR0, 0x28    @ clear register offset
 .equ    GPSET0, 0x1c    @ set register offset
@@ -12,13 +12,13 @@
 .equ    PIN, 22                        @ Used to set PIN high / low
 
 
-@ Arguments for mmap
+@ Args for mmap
 .equ    OFFSET_FILE_DESCRP, 0   @ file descriptor
 .equ    mem_fd_open, 3
 .equ    BLOCK_SIZE, 4096        @ Raspbian memory page
 .equ    ADDRESS_ARG, 3          @ device address
 
-@ other
+@ Misc
 .equ    SLEEP_IN_S,1            @ sleep one second
 
 @ The following are defined in /usr/include/asm-generic/mman-common.h:
@@ -82,6 +82,8 @@ main:
 @ for 1Hz 25/75
 @ .equ On_time , 187000000
 @ .equ Off_time, 561000000
+
+
 
 @ for fastest frequency = 100k Hz at 50.4/49.6 % Duty Cycle
 @.equ On_time , 3740
