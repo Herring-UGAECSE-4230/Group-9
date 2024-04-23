@@ -7,8 +7,8 @@ endif
 
 %.o : %.s
 	as $(DEBUGFLGS) $< -o $@
-GPIO_ON: $(OBJS)
-	gcc -o GPIO_ON $(OBJS)
+GPIO_ON_OFF: $(OBJS)
+	gcc -o GPIO_ON_OFF $(OBJS)
 
 clean:
-	rm *.o GPIO_ON
+	rm *.o GPIO_ON_OFF
