@@ -84,8 +84,8 @@ main:
 @.equ Off_time, 500
 
 @ for data
- .equ On_time, 215000   
- .equ Off_time, 215000    
+ .equ On_time, 43000
+ .equ Off_time, 43000
 
 loop:
 @ Turn on
